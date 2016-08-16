@@ -1,0 +1,36 @@
+Given a range [m, n] where 0 <= m <= n <= 2147483647, return the bitwise AND of all numbers in this range, inclusive.
+
+For example, given the range [5, 7], you should return 4.
+
+Credits:
+Special thanks to @amrsaqr for adding this problem and creating all test cases.
+
+Tags: Bit Manipulation
+
+
+
+-----------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+*** Python ***
+
+class Solution(object):
+    def rangeBitwiseAnd(self, m, n):
+        """
+        :type m: int
+        :type n: int
+        :rtype: int
+        """
+        # the result is the same bit value of every number between m and n from left to right
+        # [26, 30]: 11010, 11011, 11100, 11101, 11110
+        # the same bit value from left to right is 11___
+        # so the result is 11000
+        
+        i = 0
+        while m != n:
+            m = m >> 1
+            n = n >> 1
+            i += 1
+        
+        return m << i
