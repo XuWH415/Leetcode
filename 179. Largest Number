@@ -1,0 +1,35 @@
+Given a list of non negative integers, arrange them such that they form the largest number.
+
+For example, given [3, 30, 34, 5, 9], the largest formed number is 9534330.
+
+Note: The result may be very large, so you need to return a string instead of an integer.
+
+Credits:
+Special thanks to @ts for adding this problem and creating all test cases.
+
+Tags: Sort
+
+
+
+--------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+more detail analysis: https://discuss.leetcode.com/topic/7407/how-to-prove-that-comparator-based-solutions-are-correct
+
+*** Python ***
+
+class Solution:
+    # @param {integer[]} nums
+    # @return {string}
+    def largestNumber(self, nums):
+        def comparator(a, b):   # treat each num as string, sort string A and B by comparing concatenation AB and BA
+            if a == b:
+                return 0
+            elif (a + b) > (b + a):
+                return 1
+            else:
+                return -1
+        
+        newnums = sorted([str(x) for x in nums], cmp = comparator, reverse = True)
+        return str(int(''.join(newnums)))
