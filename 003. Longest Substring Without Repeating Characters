@@ -1,0 +1,52 @@
+Given a string, find the length of the longest substring without repeating characters.
+
+Examples:
+
+Given "abcabcbb", the answer is "abc", which the length is 3.
+
+Given "bbbbb", the answer is "b", with the length of 1.
+
+Given "pwwkew", the answer is "wke", with the length of 3. Note that the answer must be a substring, "pwke" is a subsequence and not a substring.
+
+Tags: Hash Table, Two Pointers, String
+Similar Problems: (H) Longest Substring with At Most Two Distinct Characters
+
+
+
+--------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+*** Python ***
+
+class Solution(object):
+    def lengthOfLongestSubstring(self, s):
+        """
+        :type s: str
+        :rtype: int
+        """
+        if not s:
+            return 0
+            
+        h = set()   # record distinct characters
+        i1 = i2 = 0 # record the start and end of substring
+        maxlen = 0  # global max length
+        localmaxlen = 0    # local max length
+        
+        while i2 < len(s):
+            if s[i2] not in h:  # if new character found, add it to substring
+                h.add(s[i2])
+                localmaxlen += 1
+            else:   # update substring until only distinct characters left
+                maxlen = max(localmaxlen, maxlen)  # update global max length
+                while s[i1] != s[i2]:
+                    h.remove(s[i1])
+                    localmaxlen -= 1
+                    i1 += 1
+                i1 += 1
+                
+            i2 += 1
+            
+        maxlen = max(localmaxlen, maxlen)   # update global max length
+        
+        return maxlen
