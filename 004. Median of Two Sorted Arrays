@@ -1,0 +1,62 @@
+There are two sorted arrays nums1 and nums2 of size m and n respectively.
+
+Find the median of the two sorted arrays. The overall run time complexity should be O(log (m+n)).
+
+Example 1:
+nums1 = [1, 3]
+nums2 = [2]
+
+The median is 2.0
+Example 2:
+nums1 = [1, 2]
+nums2 = [3, 4]
+
+The median is (2 + 3)/2 = 2.5
+
+Tags: Binary Search, Array, Divide and Conquer
+
+
+
+--------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+*** Python ***
+
+class Solution(object):
+    def findMedianSortedArrays(self, nums1, nums2):
+        """
+        :type nums1: List[int]
+        :type nums2: List[int]
+        :rtype: float
+        """
+        if not nums1 and not nums2:
+            return
+        
+        def findKthTwoSortedArrays(nums1, s1, e1, nums2, s2, e2, k):
+            l1 = e1 - s1
+            l2 = e2 - s2
+            if l1 > l2: # make sure nums1 is shorter, save troubles
+                return findKthTwoSortedArrays(nums2, s2, e2, nums1, s1, e1, k)
+            if l1 <= 0: # nums1 is empty, immediate return
+                return nums2[k - 1]
+            if k == 1:  # find smallest element
+                return min(nums1[s1], nums2[s2])
+                
+            #   make sure the sum of part1 and part2 is k, and indexes are within range
+            part1 = min(k // 2, l1)
+            part2 = k - part1
+                
+            if nums1[s1 + part1 - 1] == nums2[s2 + part2 - 1]:  # the one we are comparing are the kth smallest one
+                return nums1[s1 + part1 - 1]
+            elif nums1[s1 + part1 - 1] < nums2[s2 + part2 - 1]: # get rid off the first half of nums1
+                return findKthTwoSortedArrays(nums1, s1 + part1, e1, nums2, s2, e2, part2)
+            else:   # get rid off the first half of nums2
+                return findKthTwoSortedArrays(nums1, s1 , e1, nums2, s2 + part2, e2, part1)
+        
+        
+        tlen = len(nums1) + len(nums2)
+        if (tlen % 2) == 0:
+            return (findKthTwoSortedArrays(nums1, 0, len(nums1), nums2, 0, len(nums2), tlen // 2) + findKthTwoSortedArrays(nums1, 0, len(nums1), nums2, 0, len(nums2), (tlen // 2) + 1)) / 2.0
+        else:
+            return findKthTwoSortedArrays(nums1, 0, len(nums1), nums2, 0, len(nums2), (tlen // 2) + 1)
