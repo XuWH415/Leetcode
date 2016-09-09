@@ -21,6 +21,7 @@ Similar Problems: (E) Two Sum, (M) 3Sum Closest, (M) 4Sum, (M) 3Sum Smaller
 
 *** Python ***
 
+### No Sorting:
 class Solution(object):
     def threeSum(self, nums):
         """
@@ -53,5 +54,40 @@ class Solution(object):
                 d[nums[i]] += 1
             else:
                 continue
+        
+        return list(map(list, s))
+
+### Sorting:
+class Solution(object):
+    def threeSum(self, nums):
+        """
+        :type nums: List[int]
+        :rtype: List[List[int]]
+        """
+        if len(nums) < 3:
+            return []
+            
+        nums.sort()
+        n = len(nums)
+        s = set()
+        
+        def twoSum(nums, i, j, t):
+            result = []
+            while i < j:
+                if (nums[i] + nums[j]) < t:
+                    i += 1
+                elif (nums[i] + nums[j]) > t:
+                    j -= 1
+                else:
+                    result.append([i, j])
+                    i += 1
+                    j -= 1
+            return result
+        
+        for i in range(len(nums) - 2):
+            r = twoSum(nums, i + 1, n - 1, -nums[i])
+            if r:
+                for p in r:
+                    s.add((nums[i], nums[p[0]], nums[p[1]]))
         
         return list(map(list, s))
