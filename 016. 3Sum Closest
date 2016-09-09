@@ -1,0 +1,58 @@
+Given an array S of n integers, find three integers in S such that the sum is closest to a given number, target. Return the sum of the three integers. You may assume that each input would have exactly one solution.
+
+    For example, given array S = {-1 2 1 -4}, and target = 1.
+
+    The sum that is closest to the target is 2. (-1 + 2 + 1 = 2).
+
+Tags: Array, Two Pointers
+Similar Problems: (M) 3Sum, (M) 3Sum Smaller
+
+
+
+--------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+*** Python ***
+
+class Solution(object):
+    def threeSumClosest(self, nums, target):
+        """
+        :type nums: List[int]
+        :type target: int
+        :rtype: int
+        """
+        nums.sort()
+        n = len(nums)
+        mingap = float('inf')
+        sign = 1
+        
+        def twoSumClosest(nums, i, j, t):
+            mingap = float('inf')
+            sign = 1
+            while i < j:
+                s = nums[i] + nums[j]
+                if s < t:
+                    if (t - s) < mingap:
+                        mingap = t - s
+                        sign = -1
+                    i += 1
+                elif s > t:
+                    if (s - t) < mingap:
+                        mingap = s - t
+                        sign = 1
+                    j -= 1
+                else:
+                    mingap = 0
+                    sign = 1
+                    break
+            return mingap, sign
+                
+        for i in range(n - 2):
+            t = target - nums[i]
+            m, s = twoSumClosest(nums, i + 1, n - 1, t)
+            if m < mingap:
+                mingap = m
+                sign = s
+        
+        return target + sign * mingap
