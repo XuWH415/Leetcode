@@ -36,6 +36,7 @@ class Solution(object):
         if not head:
             return head
         
+        # one pointer goes n step first, and then both points go until the first one hit the end, at this time the second one is n step away from tail
         p0 = p1 = p2 = head
         count = 0
         while p2 != None:
