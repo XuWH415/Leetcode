@@ -1,0 +1,50 @@
+Given a digit string, return all possible letter combinations that the number could represent.
+
+A mapping of digit to letters (just like on the telephone buttons) is given below.
+
+Input:Digit string "23"
+Output: ["ad", "ae", "af", "bd", "be", "bf", "cd", "ce", "cf"].
+
+Note:
+Although the above answer is in lexicographical order, your answer could be in any order you want.
+
+Tags: Backtracking, String
+Similar Problems: (M) Generate Parentheses, (M) Combination Sum
+
+
+
+--------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+*** Python ***
+
+class Solution(object):
+    def letterCombinations(self, digits):
+        """
+        :type digits: str
+        :rtype: List[str]
+        """
+        if not digits:
+            return []
+            
+        d = {'0':' ', '1':'*', '2': 'abc', '3': 'def', '4': 'ghi', '5': 'jkl', '6': 'mno', '7': 'pqrs', '8': 'tuv', '9': 'wxyz'}
+        
+        def join(x):
+            return ''.join(x)
+        
+        def recur(digits, i, d):
+            if i == 0:
+                r = []
+                for c in d[digits[0]]:
+                    r.append([c])
+                return r
+            else:
+                r = recur(digits, i - 1, d)
+                rr = []
+                for c in d[digits[i]]:
+                    for s in r:
+                        rr.append(s + [c])
+                return rr
+        
+        return map(join, recur(digits, len(digits) - 1, d))
