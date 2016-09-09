@@ -1,0 +1,105 @@
+Implement regular expression matching with support for '.' and '*'.
+
+'.' Matches any single character.
+'*' Matches zero or more of the preceding element.
+
+The matching should cover the entire input string (not partial).
+
+The function prototype should be:
+bool isMatch(const char *s, const char *p)
+
+Some examples:
+isMatch("aa","a") → false
+isMatch("aa","aa") → true
+isMatch("aaa","aa") → false
+isMatch("aa", "a*") → true
+isMatch("aa", ".*") → true
+isMatch("ab", ".*") → true
+isMatch("aab", "c*a*b") → true
+
+Tags: Dynamic Programming, Backtracking, String
+Similar Problems: (H) Wildcard Matching
+
+
+
+
+-----------------------------------------------------------------------------------------------------------------------------------
+
+
+
+*** Python ***
+
+class Solution(object):
+    def isMatch(self, s, p):
+        """
+        :type s: str
+        :type p: str
+        :rtype: bool
+        """
+        
+        def findNextNot(s, i, c):
+            j = i
+            while j < len(s):
+                if s[j] == c:
+                    j += 1
+                else:
+                    break
+            return j
+        
+        def match(s, i, p, j):
+            # print((i, j))
+            if i == len(s) or j == len(p):
+                if i == len(s) and j == len(p):
+                    return True
+                elif i == len(s) and j < len(p):
+                    if j < (len(p) - 1) and p[j + 1] == '*':
+                        jj = findNextNot(p, j + 1, '*')
+                        return match(s, i, p, jj)
+                    else:
+                        return False
+                else:
+                    return False
+                
+            if p[j] == '.':
+                # print(1)
+                if j < (len(p) - 1) and p[j + 1] == '*':
+                    jj = findNextNot(p, j + 1, '*') # find next index of character that is not '*'
+                    temp = False
+                    for k in range(i, len(s) + 1):
+                        temp = temp or match(s, k, p, jj)
+                        if temp:
+                            break
+                    return temp
+                else:
+                    # print(12)
+                    return match(s, i + 1, p, j + 1)
+            elif p[j] == '*':
+                # print(2)
+                return False
+            else:
+                if s[i] == p[j]:
+                    # print(31)
+                    if j < (len(p) - 1) and p[j + 1] == '*':
+                        # print(311)
+                        ii = findNextNot(s, i, s[i])    # find next index of character that is not s[i]
+                        jj = findNextNot(p, j + 1, '*') # find next index of character that is not '*'
+                        temp = False
+                        for k in range(i, ii + 1):
+                            temp = temp or match(s, k, p, jj)
+                            if temp:
+                                break
+                        return temp
+                    else:
+                        # print(312)
+                        return match(s, i + 1, p, j + 1)
+                else:
+                    # print(32)
+                    if j < (len(p) - 1) and p[j + 1] == '*':
+                        # print(321)
+                        jj = findNextNot(p, j + 1, '*')
+                        return match(s, i, p, jj)
+                    else:
+                        # print(322)
+                        return False
+                        
+        return match(s, 0, p, 0)
