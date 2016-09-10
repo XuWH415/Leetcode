@@ -1,0 +1,52 @@
+Merge two sorted linked lists and return it as a new list. The new list should be made by splicing together the nodes of the first two lists.
+
+Tags: Linked List
+Similar Problems: (H) Merge k Sorted Lists, (E) Merge Sorted Array, (M) Sort List, (M) Shortest Word Distance II
+
+
+
+--------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+*** Python ***
+
+# Definition for singly-linked list.
+# class ListNode(object):
+#     def __init__(self, x):
+#         self.val = x
+#         self.next = None
+
+class Solution(object):
+    def mergeTwoLists(self, l1, l2):
+        """
+        :type l1: ListNode
+        :type l2: ListNode
+        :rtype: ListNode
+        """
+        if not l1:
+            return l2
+        if not l2:
+            return l1
+        
+        p1 = l1
+        p2 = l2
+        h = ListNode(0) # create a dummy node
+        p = h
+        while p1 != None or p2 != None:
+            if p1 == None:
+                p.next = p2
+                break
+            if p2 == None:
+                p.next = p1
+                break
+            
+            if p1.val <= p2.val:
+                p.next = ListNode(p1.val)
+                p1 = p1.next
+            else:
+                p.next = ListNode(p2.val)
+                p2 = p2.next
+            p = p.next
+        
+        return h.next
