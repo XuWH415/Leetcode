@@ -11,43 +11,34 @@ Similar Problems: (E) Merge Two Sorted Lists, (M) Ugly Number II
 
 *** Python ***
 
-##### UNFINISHED!!!
 # Definition for singly-linked list.
 # class ListNode(object):
 #     def __init__(self, x):
 #         self.val = x
 #         self.next = None
 
-class PriorityQueue(object):
-    def __init__(self):
-        self.pqueue = []
-        self.length = 0
+class PriorityQueue(object):    # a priority queue class
+    def __init__(self, l = []): # initialize priority queue
+        self.pqueue = sorted(l)
+        self.length = len(l)
     
-    def insert(self, x, cmp):
-        if self.length = 0:
+    def insert(self, x):    # insert x into priority queue
+        if self.length == 0:
             self.pqueue.append(x)
             self.length += 1
         else:
-            tempqueue = map(cmp, self.pqueue)
-            tempx = cmp(x)
-            i, j = 0, self.length
-            while i < j:
-                m = (j - i) // 2
-                if tempqueue[m] > tempx:
-                    j = m
-                elif tempqueue[m] < tempx:
-                    i = m
-                else:
-                    break
-            
-            self.pqueue.insert(i, x)
+            import bisect   # a module focusing on finding insert point into sorted list
+            bisect.insort_left(self.pqueue, x)  # insert x into sorted queue
             self.length += 1
     
-    def pop(self):
+    def pop(self):  # pop out one element from the top of queue
         if self.length > 0:
             self.length -= 0
             return self.pqueue.pop(0)
         return
+    
+    def getLen(self):   # get queue length
+        return self.length
 
 class Solution(object):
     def mergeKLists(self, lists):
@@ -59,19 +50,23 @@ class Solution(object):
             return None
             
         k = len(lists)
-        pointers = [lists[x] for x in range(k)]
-        pointercount = 0
-        pqueue = PriorityQueue()
-        for i in range(k):
-            if pointers[i] != None:
-                pointercount += 1
-                pqueue.insert((pointers[i].val, i), lambda x: return x[0])
-                
-        head = ListNode(0)
+        pointers = [lists[x] for x in range(k)] # pointers pointing at the head of each sorted list
+        pqueue = PriorityQueue([(pointers[i].val, i) for i in range(k) if pointers[i]]) # initialize priority queue using pointers
         
-        while pointercount > 0:
-            pointercount = 0
-            for i in range(k):
-                if pointers[i] != None:
-                    pointercount += 1
-                    head.next = 
+        head = ListNode(0)  # a psuedo-head
+        p = head
+        count = pqueue.getLen()
+        
+        while count > 0:
+            t = pqueue.pop()[1]
+            p.next = pointers[t]
+            p = p.next
+            count -= 1
+            
+            pointers[t] = pointers[t].next
+            
+            if pointers[t] != None:
+                pqueue.insert((pointers[t].val, t))
+                count += 1
+                
+        return head.next
