@@ -1,0 +1,77 @@
+Merge k sorted linked lists and return it as one sorted list. Analyze and describe its complexity.
+
+Tags: Divide and Conquer, Linked List, Heap
+Similar Problems: (E) Merge Two Sorted Lists, (M) Ugly Number II
+
+
+
+--------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+*** Python ***
+
+##### UNFINISHED!!!
+# Definition for singly-linked list.
+# class ListNode(object):
+#     def __init__(self, x):
+#         self.val = x
+#         self.next = None
+
+class PriorityQueue(object):
+    def __init__(self):
+        self.pqueue = []
+        self.length = 0
+    
+    def insert(self, x, cmp):
+        if self.length = 0:
+            self.pqueue.append(x)
+            self.length += 1
+        else:
+            tempqueue = map(cmp, self.pqueue)
+            tempx = cmp(x)
+            i, j = 0, self.length
+            while i < j:
+                m = (j - i) // 2
+                if tempqueue[m] > tempx:
+                    j = m
+                elif tempqueue[m] < tempx:
+                    i = m
+                else:
+                    break
+            
+            self.pqueue.insert(i, x)
+            self.length += 1
+    
+    def pop(self):
+        if self.length > 0:
+            self.length -= 0
+            return self.pqueue.pop(0)
+        return
+
+class Solution(object):
+    def mergeKLists(self, lists):
+        """
+        :type lists: List[ListNode]
+        :rtype: ListNode
+        """
+        if not lists:
+            return None
+            
+        k = len(lists)
+        pointers = [lists[x] for x in range(k)]
+        pointercount = 0
+        pqueue = PriorityQueue()
+        for i in range(k):
+            if pointers[i] != None:
+                pointercount += 1
+                pqueue.insert((pointers[i].val, i), lambda x: return x[0])
+                
+        head = ListNode(0)
+        
+        while pointercount > 0:
+            pointercount = 0
+            for i in range(k):
+                if pointers[i] != None:
+                    pointercount += 1
+                    head.next = 
