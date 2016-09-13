@@ -18,11 +18,11 @@ Similar Problems: (E) Merge Two Sorted Lists, (M) Ugly Number II
 #         self.next = None
 
 class PriorityQueue(object):    # a priority queue class
-    def __init__(self, l = []): # initialize priority queue
+    def __init__(self, l = []): # initialize priority queue, O(n*lgn)
         self.pqueue = sorted(l)
         self.length = len(l)
     
-    def insert(self, x):    # insert x into priority queue
+    def insert(self, x):    # insert x into priority queue, O(lgn) + O(n) = O(n)
         if self.length == 0:
             self.pqueue.append(x)
             self.length += 1
@@ -31,13 +31,13 @@ class PriorityQueue(object):    # a priority queue class
             bisect.insort_left(self.pqueue, x)  # insert x into sorted queue
             self.length += 1
     
-    def pop(self):  # pop out one element from the top of queue
+    def pop(self):  # pop out one element from the top of queue, O(1)
         if self.length > 0:
             self.length -= 0
             return self.pqueue.pop(0)
         return
     
-    def getLen(self):   # get queue length
+    def getLen(self):   # get queue length, O(1)
         return self.length
 
 class Solution(object):
@@ -50,14 +50,14 @@ class Solution(object):
             return None
             
         k = len(lists)
-        pointers = [lists[x] for x in range(k)] # pointers pointing at the head of each sorted list
-        pqueue = PriorityQueue([(pointers[i].val, i) for i in range(k) if pointers[i]]) # initialize priority queue using pointers
+        pointers = [lists[x] for x in range(k)] # pointers pointing at the head of each sorted list, O(k)
+        pqueue = PriorityQueue([(pointers[i].val, i) for i in range(k) if pointers[i]]) # initialize priority queue using pointers, O(k*lgk)
         
         head = ListNode(0)  # a psuedo-head
         p = head
         count = pqueue.getLen()
         
-        while count > 0:
+        while count > 0:    # O(N*k) where N is total number of elements of all lists
             t = pqueue.pop()[1]
             p.next = pointers[t]
             p = p.next
