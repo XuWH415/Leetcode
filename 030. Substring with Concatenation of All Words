@@ -1,0 +1,75 @@
+You are given a string, s, and a list of words, words, that are all of the same length. Find all starting indices of substring(s) in s that is a concatenation of each word in words exactly once and without any intervening characters.
+
+For example, given:
+s: "barfoothefoobarman"
+words: ["foo", "bar"]
+
+You should return the indices: [0,9].
+(order does not matter).
+
+Tags: Hash Table, Two Pointers, String
+Similar Problems: (H) Minimum Window Substring
+
+
+
+--------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+*** Python ***
+
+class Solution(object):
+    def findSubstring(self, s, words):
+        """
+        :type s: str
+        :type words: List[str]
+        :rtype: List[int]
+        """
+        if len(''.join(words)) > len(s) or not s or not words:
+            return []
+        
+        from collections import Counter
+        
+        wlen = len(words[0])
+        windowlen = len(words)
+        slen = len(s)
+        r = []
+        
+        for i in range(wlen):   # offset value
+            count = 0
+            d = Counter(words)
+            
+            j, k = 0 + i, 0 + i
+            while k < (slen - wlen + 1):
+                if s[k : k + wlen] in d:    # current substring is in words
+                    if d[s[k : k + wlen]] > 0:  # count it in
+                        count += 1
+                        d[s[k : k + wlen]] -= 1
+                        
+                        if count == windowlen:  # check if all words included
+                            r.append(j)
+                    else:   # move the first pointer until meet the same substring
+                        while j < k:
+                            if s[j : j + wlen] == s[k : k + wlen]:
+                                j += wlen
+                                break
+                            else:
+                                d[s[j : j + wlen]] += 1
+                                count -= 1
+                                j += wlen
+                                
+                        if count == windowlen:  # check if all words included
+                            r.append(j)
+                            
+                    k += wlen
+                        
+                else:   # current substring is not in words, clear window and start from next position
+                    while j < k:
+                        d[s[j : j + wlen]] += 1
+                        count -= 1
+                        j += wlen
+                        
+                    k += wlen
+                    j = k
+            
+        return r
