@@ -1,0 +1,72 @@
+Implement next permutation, which rearranges numbers into the lexicographically next greater permutation of numbers.
+
+If such arrangement is not possible, it must rearrange it as the lowest possible order (ie, sorted in ascending order).
+
+The replacement must be in-place, do not allocate extra memory.
+
+Here are some examples. Inputs are in the left-hand column and its corresponding outputs are in the right-hand column.
+1,2,3 → 1,3,2
+3,2,1 → 1,2,3
+1,1,5 → 1,5,1
+
+Tags: Array
+Similar Problems: (M) Permutations, (M) Permutations II, (M) Permutation Sequence, (M) Palindrome Permutation II
+
+
+
+--------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+*** Python ***
+
+class Solution(object):
+    def nextPermutation(self, nums):
+        """
+        :type nums: List[int]
+        :rtype: void Do not return anything, modify nums in-place instead.
+        """
+        l = len(nums)
+        if l < 2:
+            return
+        
+        # find the first "peak" from tail to head
+        i = l - 1
+        while i > 0:
+            if nums[i] > nums[i - 1]:
+                break
+            else:
+                i -= 1
+        
+        
+        if i == 0:  # nums are in descending order, just reorder it
+            nums.sort()
+            # i = 0
+            # j = l - 1
+            # while i < j:
+            #     nums[i] += nums[j]
+            #     nums[j] = nums[i] - nums[j]
+            #     nums[i] -= nums[j]
+        else:
+            i -= 1  # nums[i] is next to "peak" at the left
+            j = i
+            while j < l - 1:    # find nums[j] that is just larger than nums[i] from its right
+                if nums[j + 1] > nums[i]:
+                    j += 1
+                else:
+                    break
+                
+            # swap nums[i] and nums[j]
+            nums[i] += nums[j]
+            nums[j] = nums[i] - nums[j]
+            nums[i] -= nums[j]
+            
+            # reorder the part in ascending order from "peak" to its right
+            i += 1
+            j = l - 1
+            while i < j:
+                nums[i] += nums[j]
+                nums[j] = nums[i] - nums[j]
+                nums[i] -= nums[j]
+                i += 1
+                j -= 1
