@@ -17,7 +17,7 @@ Similar Problems: (M) Search in Rotated Sorted Array II, (M) Find Minimum in Rot
 
 *** Python ***
 
-### Divide & Binary Search:
+### Divide & Binary Search: O(n) + O(lgn) = O(n)
 class Solution(object):
     def search(self, nums, target):
         """
@@ -69,7 +69,7 @@ class Solution(object):
                     j = m
             return -1
             
-### Binary Search:
+### Binary Search: O(lgn)
 class Solution(object):
     def search(self, nums, target):
         """
