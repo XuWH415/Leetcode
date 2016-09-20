@@ -1,0 +1,51 @@
+Given a sorted array of integers, find the starting and ending position of a given target value.
+
+Your algorithm's runtime complexity must be in the order of O(log n).
+
+If the target is not found in the array, return [-1, -1].
+
+For example,
+Given [5, 7, 7, 8, 8, 10] and target value 8,
+return [3, 4].
+
+Tags: Binary Search, Array
+Similar Problems: (E) First Bad Version
+
+
+
+--------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+*** Python ***
+
+class Solution(object):
+    def searchRange(self, nums, target):
+        """
+        :type nums: List[int]
+        :type target: int
+        :rtype: List[int]
+        """
+        if not nums:
+            return [-1, -1]
+        
+        def searchRangeRecur(nums, start, end, target):
+            if start >= end:
+                return [-1, -1]
+                
+            m = (start + end) // 2
+            if nums[m] == target:
+                currentrange = [m, m]
+                leftrange = searchRangeRecur(nums, start, m, target)
+                rightrange = searchRangeRecur(nums, m + 1, end, target)
+                if leftrange != [-1, -1]:
+                    currentrange = [leftrange[0], currentrange[1]]
+                if rightrange != [-1, -1]:
+                    currentrange = [currentrange[0], rightrange[1]]
+                return currentrange
+            elif nums[m] < target:
+                return searchRangeRecur(nums, m + 1, end, target)
+            else:
+                return searchRangeRecur(nums, start, m, target)
+        
+        return searchRangeRecur(nums, 0, len(nums), target)
