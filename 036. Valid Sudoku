@@ -1,0 +1,68 @@
+Determine if a Sudoku is valid, according to: Sudoku Puzzles - The Rules.
+
+The Sudoku board could be partially filled, where empty cells are filled with the character '.'.
+
+5  3  .  .  7  .  .  .  .
+6  .  .  1  9  5  .  .  .
+.  9  8  .  .  .  .  6  .
+8  .  .  .  6  .  .  .  3
+4  .  .  8  .  3  .  .  1
+7  .  .  .  2  .  .  .  6
+.  6  .  .  .  .  2  8  . 
+.  .  .  4  1  9  .  .  5
+.  .  .  .  8  .  .  7  9
+A partially filled sudoku which is valid.
+
+Note:
+A valid Sudoku board (partially filled) is not necessarily solvable. Only the filled cells need to be validated.
+
+Tags: Hash Table
+Similar Problems: (H) Sudoku Solver
+
+
+
+--------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+*** Python ***
+
+class Solution(object):
+    def isValidSudoku(self, board):
+        """
+        :type board: List[List[str]]
+        :rtype: bool
+        """
+        if not board:
+            return False
+            
+        # check rows
+        for i in range(9):
+            s = set()
+            for j in range(9):
+                if board[i][j] != '.' and board[i][j] in s:
+                    return False
+                else:
+                    s.add(board[i][j])
+        
+        # check column
+        for j in range(9):
+            s = set()
+            for i in range(9):
+                if board[i][j] != '.' and board[i][j] in s:
+                    return False
+                else:
+                    s.add(board[i][j])
+        
+        # check subboxes
+        for i in range(3):
+            for j in range(3):
+                s = set()
+                for m in range(3):
+                    for n in range(3):
+                        if board[3 * i + m][3 * j + n] != '.' and board[3 * i + m][3 * j + n] in s:
+                            return False
+                        else:
+                            s.add(board[3 * i + m][3 * j + n])
+        
+        return True
