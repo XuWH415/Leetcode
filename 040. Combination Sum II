@@ -1,0 +1,69 @@
+Given a collection of candidate numbers (C) and a target number (T), find all unique combinations in C where the candidate numbers sums to T.
+
+Each number in C may only be used once in the combination.
+
+Note:
+All numbers (including target) will be positive integers.
+The solution set must not contain duplicate combinations.
+For example, given candidate set [10, 1, 2, 7, 6, 1, 5] and target 8, 
+A solution set is: 
+[
+  [1, 7],
+  [1, 2, 5],
+  [2, 6],
+  [1, 1, 6]
+]
+
+Tags: Array, Backtracking
+Similar Problems: (M) Combination Sum
+
+
+
+--------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+*** Python ***
+
+class Solution(object):
+    def combinationSum2(self, candidates, target):
+        """
+        :type candidates: List[int]
+        :type target: int
+        :rtype: List[List[int]]
+        """
+        if not candidates or target <= 0:
+            return []
+        
+        import copy
+        d = dict()
+        
+        candidates = sorted(candidates)
+        
+        for i in range(target + 1):
+            if i not in candidates:
+                d[i] = []
+            else:
+                d[i] = [[candidates.index(i)]]
+        
+        for i in range(target + 1):
+            if d[i]:
+                for l in d[i]:
+                    s = set()   # a record of candidates that are used already(due to replicates)
+                    for j in range(len(candidates)):
+                        if (i + candidates[j]) <= target:   # sum is smaller than target
+                            if candidates[j] not in s and j > l[-1]:
+                                s.add(candidates[j])
+                                t = copy.copy(l)
+                                t.append(j)
+                                d[i + candidates[j]].append(t)
+                        else:   # sum is larger than target, no need to continue
+                            break
+                        
+        
+        result = d[target]
+        for l in result:
+            for i in range(len(l)):
+                l[i] = candidates[l[i]]
+                
+        return result
