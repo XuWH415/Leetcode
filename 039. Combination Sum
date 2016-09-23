@@ -1,0 +1,61 @@
+Given a set of candidate numbers (C) and a target number (T), find all unique combinations in C where the candidate numbers sums to T.
+
+The same repeated number may be chosen from C unlimited number of times.
+
+Note:
+All numbers (including target) will be positive integers.
+The solution set must not contain duplicate combinations.
+For example, given candidate set [2, 3, 6, 7] and target 7, 
+A solution set is: 
+[
+  [7],
+  [2, 2, 3]
+]
+
+Tags: Array, Backtracking
+Similar Problems: (M) Letter Combinations of a Phone Number, (M) Combination Sum II, (M) Combinations, (M) Combination Sum III, (M) Factor Combinations, (M) Combination Sum IV
+
+
+
+--------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+*** Python ***
+
+class Solution(object):
+    def combinationSum(self, candidates, target):
+        """
+        :type candidates: List[int]
+        :type target: int
+        :rtype: List[List[int]]
+        """
+        if not candidates or target <= 0:
+            return 0
+        
+        import copy
+        d = dict()
+        
+        candidates = sorted(list(set(candidates)))
+        
+        for i in range(target + 1):
+            if i not in candidates:
+                d[i] = []
+            else:
+                d[i] = [[i]]
+        
+        for i in range(target + 1):
+            if d[i]:
+                for n in candidates:
+                    if (i + n) <= target:   # sum is smaller than target
+                        for l in d[i]:
+                            if n >= l[-1]:  # avoid repetition by comparing n to the largest number in list
+                                t = copy.copy(l)
+                                t.append(n)
+                                d[i + n].insert(0, t)
+                            else:   # later lists have larger largest number, no need to compute
+                                break
+                    else:   # sum is larger than target, no need to try later candidates
+                        break
+        
+        return d[target]
