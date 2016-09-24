@@ -1,0 +1,126 @@
+Implement wildcard pattern matching with support for '?' and '*'.
+
+'?' Matches any single character.
+'*' Matches any sequence of characters (including the empty sequence).
+
+The matching should cover the entire input string (not partial).
+
+The function prototype should be:
+bool isMatch(const char *s, const char *p)
+
+Some examples:
+isMatch("aa","a") → false
+isMatch("aa","aa") → true
+isMatch("aaa","aa") → false
+isMatch("aa", "*") → true
+isMatch("aa", "a*") → true
+isMatch("ab", "?*") → true
+isMatch("aab", "c*a*b") → false
+
+Tags: Dynamic Programming, Backtracking, Greedy, String
+Similar Problems: (H) Regular Expression Matching
+
+
+
+--------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+*** Python ***
+
+### Recursive Solution
+class Solution(object):
+    def isMatch(self, s, p):
+        """
+        :type s: str
+        :type p: str
+        :rtype: bool
+        """
+        from collections import Counter
+        c = Counter(p)
+        if len(s) < (len(p) - c['*']):
+            return False
+        
+        def findNextNot(s, i, c):   # find the next character in s from index i that is not c
+            j = i
+            while j < len(s):
+                if s[j] == c:
+                    j += 1
+                else:
+                    break
+                
+            return j
+        
+        def match(s, i, p, j, d):
+            if (i, j) in d: # if already calculated
+                return d[i, j]
+                
+            if i == len(s) or j == len(p):  # at least one of ends is met
+                if i == len(s) and j == len(p): # both ends meet
+                    d[i, j] = True
+                    return True
+                elif j == len(p):   # s has unmatched part
+                    d[i, j] = False
+                    return False
+                else:   # p has unmatched part
+                    if p[j] == '*': # current character is '*'
+                        jj = findNextNot(p, j, '*')
+                        d[i, j] = match(s, i, p, jj, d)
+                        return d[i, j]
+                    else:   # current character is not '*'
+                        d[i, j] = False
+                        return False
+            
+            if s[i] == p[j] or p[j] == '?': # 
+                d[i, j] = match(s, i + 1, p, j + 1, d)
+                return d[i, j]
+            elif p[j] == '*':   # current character is '*'
+                temp = False
+                jj = findNextNot(p, j, '*')
+                for k in range(i, len(s) + 1):
+                    temp = temp or match(s, k, p, jj, d)
+                    if temp:
+                        break
+                d[i, j] = temp
+                return temp
+            else:
+                d[i, j] = False
+                return False
+                    
+        d = dict()
+        return match(s, 0, p, 0, d)
+        
+### Non-recursive Solution
+class Solution(object):
+    def isMatch(self, s, p):
+        """
+        :type s: str
+        :type p: str
+        :rtype: bool
+        """
+        from collections import Counter
+        c = Counter(p)
+        if len(s) < (len(p) - c['*']):
+            return False
+        
+        i, j = 0, 0
+        si, sj = 0, -1  # record of i and j when meeting '*'
+        while i < len(s):
+            if j < len(p) and (s[i] == p[j] or p[j] == '?'):
+                i += 1
+                j += 1
+            elif j < len(p) and p[j] == '*':    # when meeting '*'
+                sj = j  # record index of '*'
+                j += 1  # move on to next character
+                si = i  # record index of current matching index
+            elif sj != -1:  # s[i] != p[j] or j reaches end of p, but '*' has been encountered
+                j = sj + 1  # recover j from index of '*'
+                si += 1 # move last matching position to the next
+                i = si  # start new match from i
+            else:   # no backtracking
+                return False
+        
+        while j < len(p) and p[j] == '*':   # skip '*'
+            j += 1
+        
+        return j == len(p)
