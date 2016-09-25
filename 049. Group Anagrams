@@ -1,0 +1,40 @@
+Given an array of strings, group anagrams together.
+
+For example, given: ["eat", "tea", "tan", "ate", "nat", "bat"], 
+Return:
+
+[
+  ["ate", "eat","tea"],
+  ["nat","tan"],
+  ["bat"]
+]
+Note: All inputs will be in lower-case.
+
+Tags: Hash Table, String
+Similar Problems: (E) Valid Anagram, (E) Group Shifted Strings
+
+
+
+--------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+*** Python ***
+
+class Solution(object):
+    def groupAnagrams(self, strs):
+        """
+        :type strs: List[str]
+        :rtype: List[List[str]]
+        """
+        if not strs:
+            return []
+            
+        d = dict()
+        for i in range(len(strs)):
+            s = ''.join(sorted(strs[i]))    # use sorted characters as key
+            if s not in d:
+                d[s] = []
+            d[s].append(strs[i])
+        
+        return list(d.values())
