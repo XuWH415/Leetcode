@@ -1,0 +1,44 @@
+Follow up for N-Queens problem.
+
+Now, instead outputting board configurations, return the total number of distinct solutions.
+
+Tags: Backtracking
+Similar Problems: (H) N-Queens
+
+
+
+----------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+*** Python ***
+
+class Solution(object):
+    def totalNQueens(self, n):
+        """
+        :type n: int
+        :rtype: int
+        """
+        if n < 1:
+            return 0
+        
+        def nQueensSolver(n, prev, result):
+            if n == len(prev):
+                result.append(prev)
+                return
+            
+            for i in range(n):
+                if not prev:
+                    nQueensSolver(n, [i], result)
+                else:
+                    flag = True
+                    for j in range(len(prev)):
+                        flag  = flag and i != prev[j] and (len(prev) - j) != abs(i - prev[j])
+                        if not flag:
+                            break
+                    if flag:
+                        nQueensSolver(n, prev + [i], result)
+        
+        result = []
+        nQueensSolver(n, [], result)
+        return len(result)
