@@ -1,0 +1,43 @@
+Given a collection of numbers that might contain duplicates, return all possible unique permutations.
+
+For example,
+[1,1,2] have the following unique permutations:
+[
+  [1,1,2],
+  [1,2,1],
+  [2,1,1]
+]
+
+Tags: Backtracking
+Similar Problems: (M) Next Permutation, (M) Permutations, (M) Palindrome Permutation II
+
+
+
+----------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+*** Python ***
+
+class Solution(object):
+    def permuteUnique(self, nums):
+        """
+        :type nums: List[int]
+        :rtype: List[List[int]]
+        """
+        
+        if len(nums) < 2:
+            return [nums]
+        
+        result = []
+        s = set()
+        
+        for i in range(len(nums)):
+            if nums[i] not in s:
+                s.add(nums[i])
+                newnums = nums[:i] + nums[i + 1:]
+                pmt = self.permuteUnique(newnums)
+                pmt = [x + [nums[i]] for x in pmt]
+                result += pmt
+        
+        return result
