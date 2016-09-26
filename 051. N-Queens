@@ -51,6 +51,8 @@ class Solution(object):
                     flag = True
                     for j in range(len(prev)):
                         flag  = flag and i != prev[j] and (len(prev) - j) != abs(i - prev[j])
+                        if not flag:
+                            break
                     if flag:
                         nQueensSolver(n, prev + [i], result)
         
