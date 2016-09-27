@@ -1,0 +1,61 @@
+The set [1,2,3,…,n] contains a total of n! unique permutations.
+
+By listing and labeling all of the permutations in order,
+We get the following sequence (ie, for n = 3):
+
+"123"
+"132"
+"213"
+"231"
+"312"
+"321"
+Given n and k, return the kth permutation sequence.
+
+Note: Given n will be between 1 and 9 inclusive.
+
+Tags: Backtracking, Math
+Similar Problems: (M) Next Permutation, (M) Permutations
+
+
+
+----------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+*** Python ***
+
+class Solution(object):
+    def getPermutation(self, n, k):
+        """
+        :type n: int
+        :type k: int
+        :rtype: str
+        """
+        def calculateFactorial(n, d):
+            t = 1
+            for i in range(1, n + 1):
+                t = t * i
+                d[i] = t
+            
+        def solver(nums, k, d, result):
+            l = len(nums)
+            if l == 1:
+                result.append(nums[0])
+                return
+                
+            b = k // d[l - 1]
+            c = k % d[l - 1]
+            if c == 0:
+                b -= 1
+                c = d[l - 1]
+            result.append(nums[b])
+            
+            solver(nums[:b] + nums[b + 1:], c, d, result)
+        
+        d = dict()
+        calculateFactorial(n, d)
+        nums = [str(x) for x in range(1, n + 1)]
+        result = []
+        solver(nums, k, d, result)
+        
+        return ''.join(result)
