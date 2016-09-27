@@ -1,0 +1,56 @@
+Given a list, rotate the list to the right by k places, where k is non-negative.
+
+For example:
+Given 1->2->3->4->5->NULL and k = 2,
+return 4->5->1->2->3->NULL.
+
+Tags: Linked List, Two Pointers
+Similar Problems: (E) Rotate Array
+
+
+
+----------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+*** Python ***
+
+# Definition for singly-linked list.
+# class ListNode(object):
+#     def __init__(self, x):
+#         self.val = x
+#         self.next = None
+
+class Solution(object):
+    def rotateRight(self, head, k):
+        """
+        :type head: ListNode
+        :type k: int
+        :rtype: ListNode
+        """
+        if not head or head.next == None:
+            return head
+        
+        dummyhead = ListNode(0)
+        dummyhead.next = head
+        first = dummyhead
+        second = head
+        
+        length = 1
+        while second.next:  # find length of list and stop at last element
+            length += 1
+            second = second.next
+            
+        k = k % length  # re-calculate k
+        if k == 0:
+            return head
+        
+        for i in range(length - k): # move to the last element in new order
+            first = first.next
+            
+        # re-order list
+        second.next = dummyhead.next
+        dummyhead.next = first.next
+        first.next = None
+        
+        return dummyhead.next
