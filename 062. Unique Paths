@@ -1,0 +1,48 @@
+A robot is located at the top-left corner of a m x n grid (marked 'Start' in the diagram below).
+
+The robot can only move either down or right at any point in time. The robot is trying to reach the bottom-right corner of the grid (marked 'Finish' in the diagram below).
+
+How many possible unique paths are there?
+
+Above is a 3 x 7 grid. How many possible unique paths are there?
+
+Note: m and n will be at most 100.
+
+Tags: Array, Dynamic Programming
+Similar Problems: (M) Unique Paths II, (M) Minimum Path Sum, (H) Dungeon Game
+
+
+
+----------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+*** Python ***
+
+class Solution(object):
+    def uniquePaths(self, m, n):
+        """
+        :type m: int
+        :type n: int
+        :rtype: int
+        """
+        if m <= 0 or n <= 0:
+            return 0
+        
+        def solver(m, n, d):
+            if m == 1 or n == 1:    # can only go one direction
+                return 1
+                
+            if m > n:   # for faster calculation, let m <= n
+                return solver(n, m, d)
+                
+            if (m, n) in d: # if already calculated, just return
+                return d[m, n]
+            
+            d[m, n] = solver(m - 1, n, d) + solver(m, n - 1, d) # two options: goes down by 1 or goes right by 1
+            
+            return d[m, n]
+            
+        d = dict()
+        
+        return solver(m, n, d)
