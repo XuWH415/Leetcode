@@ -1,0 +1,41 @@
+Given a m x n grid filled with non-negative numbers, find a path from top left to bottom right which minimizes the sum of all numbers along its path.
+
+Note: You can only move either down or right at any point in time.
+
+Tags: Array, Dynamic Programming
+Similar Problems: (M) Unique Paths, (H) Dungeon Game
+
+
+
+----------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+*** Python ***
+
+class Solution(object):
+    def minPathSum(self, grid):
+        """
+        :type grid: List[List[int]]
+        :rtype: int
+        """
+        def solver(m, n, row, col, grid, d):
+            if m == (row - 1) and n == (col - 1):
+                return grid[m][n]
+            
+            if (m, n) in d:
+                return d[m, n]
+                
+            down = right = float('inf')
+            if m < (row - 1):
+                down = solver(m + 1, n, row, col, grid, d)
+            if n < (col - 1):
+                right = solver(m, n + 1, row, col, grid, d)
+            
+            d[m, n] = grid[m][n] + min(down, right)
+            
+            return d[m, n]
+        
+        d = dict()
+        
+        return solver(0, 0, len(grid), len(grid[0]), grid, d)
