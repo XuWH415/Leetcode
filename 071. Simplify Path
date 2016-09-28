@@ -1,0 +1,49 @@
+Given an absolute path for a file (Unix-style), simplify it.
+
+For example,
+path = "/home/", => "/home"
+path = "/a/./b/../../c/", => "/c"
+
+Corner Cases:
+* Did you consider the case where path = "/../"?
+  In this case, you should return "/".
+* Another corner case is the path might contain multiple slashes '/' together, such as "/home//foo/".
+  In this case, you should ignore redundant slashes and return "/home/foo".
+
+Tags: Stack, String
+
+
+
+----------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+*** Python ***
+
+class Solution(object):
+    def simplifyPath(self, path):
+        """
+        :type path: str
+        :rtype: str
+        """
+        path = path.split('/')
+        stack = []
+        
+        for l in path:
+            if not l:   # empty string brought by extra '/'
+                continue
+            elif l == '.':  # "abcde/./f" equals to "abcde/f"
+                continue
+            elif l == '..': # ".." means go to previous level
+                if stack:   # only go up when upper level exist
+                    stack.pop()
+            else:
+                stack.append(l)
+        
+        path = '/'
+        for i in range(len(stack)):
+            path += stack[i]
+            if i < (len(stack) - 1):
+                path += '/'
+        
+        return path
