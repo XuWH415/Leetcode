@@ -1,0 +1,65 @@
+Given a string S and a string T, find the minimum window in S which will contain all the characters in T in complexity O(n).
+
+For example,
+S = "ADOBECODEBANC"
+T = "ABC"
+Minimum window is "BANC".
+
+Note:
+If there is no such window in S that covers all characters in T, return the empty string "".
+
+If there are multiple such windows, you are guaranteed that there will always be only one unique minimum window in S.
+
+Tags: Hash Table, Two Pointers, String
+Similar Problems: (H) Substring with Concatenation of All Words, (M) Minimum Size Subarray Sum, (H) Sliding Window Maximum
+
+
+
+----------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+*** Python ***
+
+class Solution(object):
+    def minWindow(self, s, t):
+        """
+        :type s: str
+        :type t: str
+        :rtype: str
+        """
+        if not s or not t:
+            return ''
+            
+        from collections import Counter
+        d = Counter(t)
+        minlen = float('inf')
+        ind = [0, 0]
+        count = 0
+        i = j = 0
+        
+        while j < len(s):
+            if s[i] not in d:   # set left bound of window when a letter in t is found
+                if j == i:
+                    j += 1
+                i += 1
+            elif s[j] in d: # set right bound of window when a letter in t is found
+                d[s[j]] -= 1
+                if d[s[j]] >= 0:    # valid count
+                    count += 1
+                j += 1
+                
+                while count == len(t):  # while window contains all letters in t
+                    if (j - i) < minlen:    # update minimum length
+                        minlen = j - i
+                        ind = [i, j]
+                        
+                    if s[i] in d:   # move left bound until window doesn't contain all letters in t
+                        d[s[i]] += 1
+                        if d[s[i]] > 0:
+                            count -= 1
+                    i += 1
+            else:   # expand right bound of window when other letters are found
+                j += 1
+        
+        return s[ind[0]:ind[1]]
