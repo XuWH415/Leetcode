@@ -27,7 +27,7 @@ Similar Problems: (M) Generalized Abbreviation
 
 *** Python ***
 
-# Bit Manipulation
+### Bit Manipulation
 class Solution(object):
     def subsets(self, nums):
         """
@@ -47,4 +47,27 @@ class Solution(object):
                 m += 1
             result.append(t)
         
+        return result
+        
+### Recursive Adding
+class Solution(object):
+    def subsets(self, nums):
+        """
+        :type nums: List[int]
+        :rtype: List[List[int]]
+        """
+        import copy
+        def solver(nums, i):
+            if i == len(nums):
+                return [[]]
+            
+            r = solver(nums, i + 1)
+            p = copy.deepcopy(r)
+            for s in p:
+                s.append(nums[i])
+            
+            p += r
+            return copy.deepcopy(p)
+        
+        result = solver(nums, 0)
         return result
