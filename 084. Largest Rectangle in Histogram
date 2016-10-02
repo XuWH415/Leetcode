@@ -29,7 +29,7 @@ class Solution(object):
         if not heights:
             return 0
             
-        heights.append(0)
+        heights.append(0)   # ensure all areas will be calculated in stack
         stack = [-1]    # provide baseline when calculation
         maxarea = 0
         for i in range(len(heights)):
