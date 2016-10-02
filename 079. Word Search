@@ -1,0 +1,84 @@
+Given a 2D board and a word, find if the word exists in the grid.
+
+The word can be constructed from letters of sequentially adjacent cell, where "adjacent" cells are those horizontally or vertically neighboring. The same letter cell may not be used more than once.
+
+For example,
+Given board =
+
+[
+  ['A','B','C','E'],
+  ['S','F','C','S'],
+  ['A','D','E','E']
+]
+word = "ABCCED", -> returns true,
+word = "SEE", -> returns true,
+word = "ABCB", -> returns false.
+
+Tags: Array, Backtracking
+Similar Problems: (H) Word Search II
+
+
+
+----------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+*** Python ***
+
+class Solution(object):
+    def exist(self, board, word):
+        """
+        :type board: List[List[str]]
+        :type word: str
+        :rtype: bool
+        """
+        def match(row, col, board, curstep, word, k, visited):
+            p, q = curstep[0], curstep[1]
+            
+            if word[k] != board[p][q]:  # not a match
+                return False
+            
+            if k == len(word) - 1:  # match to the end
+                return True
+            
+            visited[p][q] = True    # add current step to path
+            
+            # find next steps based on current location and previous path
+            nextsteps = []
+            if q > 0 and not visited[p][q - 1]:
+                nextsteps.append((p, q - 1))
+            if q < (col - 1) and not visited[p][q + 1]:
+                nextsteps.append((p, q + 1))
+            if p > 0 and not visited[p - 1][q]:
+                nextsteps.append((p - 1, q))
+            if p < (row - 1) and not visited[p + 1][q]:
+                nextsteps.append((p + 1, q))
+            
+            findmatch = False
+            for step in nextsteps:  # try each step
+                findmatch = findmatch or match(row, col, board, step, word, k + 1, visited)
+                if findmatch:
+                    return True
+            
+            visited[p][q] = False   # if not a match, delete current step from path
+            
+            return False
+        
+        row = len(board)
+        col = 0
+        if row != 0:
+            col = len(board[0])
+        if not word:
+            return True
+        if row == 0 or col == 0:
+            return False
+            
+        visited = [[False] * col for x in range(row)]
+        findmatch = False
+        for i in range(row):
+            for j in range(col):
+                findmatch = findmatch or match(row, col, board, [i, j], word, 0, visited)
+                if findmatch:
+                    break
+        
+        return findmatch
