@@ -1,0 +1,45 @@
+Given n non-negative integers representing the histogram's bar height where the width of each bar is 1, find the area of largest rectangle in the histogram.
+
+Above is a histogram where width of each bar is 1, given height = [2,1,5,6,2,3].
+
+The largest rectangle is shown in the shaded area, which has area = 10 unit.
+
+For example,
+Given heights = [2,1,5,6,2,3],
+return 10.
+
+Tags: Array, Stack
+Similar Problems: (H) Maximal Rectangle
+
+Reference: see http://www.cnblogs.com/felixfang/p/3676193.html for better explanation
+
+
+----------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+*** Python ***
+
+class Solution(object):
+    def largestRectangleArea(self, heights):
+        """
+        :type heights: List[int]
+        :rtype: int
+        """
+        if not heights:
+            return 0
+            
+        heights.append(0)
+        stack = [-1]    # provide baseline when calculation
+        maxarea = 0
+        for i in range(len(heights)):
+            if not stack or heights[i] >= heights[stack[-1]]:   # push index into stack when height is increasing
+                stack.append(i)
+            else:
+                l = stack[-1]   # record the index at top of stack because it represents the index of highest height in stack
+                while stack and heights[stack[-1]] > heights[i]:    # it can't be ">=" here because it will pop out the baseline when encounter "0"
+                    t = stack.pop() # get index of current height in stack
+                    maxarea = max(maxarea, (l - stack[-1]) * heights[t])    # the width is from (include) l to index p (not include) at top of stack AFTER pop()
+                stack.append(i) # push index into stack
+        
+        return maxarea
