@@ -1,0 +1,70 @@
+Follow up for "Search in Rotated Sorted Array":
+What if duplicates are allowed?
+
+Would this affect the run-time complexity? How and why?
+
+Write a function to determine if a given target is in the array.
+
+Tags: Array, Binary Search
+Similar Problems: (H) Search in Rotated Sorted Array
+
+
+
+----------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+*** Python ***
+
+### Divide and Binary Search: O(n) + O(lgn) = O(n)
+### No O(lgn) solution because with duplicates there is no way to make sure which side is sorted by comparing the median with ends
+### So eventually we have to search both sides, which is O(n) eventually
+class Solution(object):
+    def search(self, nums, target):
+        """
+        :type nums: List[int]
+        :type target: int
+        :rtype: bool
+        """
+        if not nums:
+            return False
+        if len(nums) == 1:
+            if nums[0] != target:
+                return False
+            else:
+                return True
+        
+        p = 0
+        while p < (len(nums) - 1):
+            if nums[p] > nums[p + 1]:
+                break
+            p += 1
+        
+        # part1: nums[0:p + 1], part2: nums[p + 1:]
+        if target < nums[0] or target > nums[p]:    # target is not in part1
+            if p != len(nums):  # part2 exists, search part2
+                i = p + 1
+                j = len(nums)
+                while i < j:
+                    m = i + (j - i) // 2
+                    if nums[m] == target:
+                        return True
+                    elif nums[m] < target:
+                        i = m + 1
+                    else:
+                        j = m
+                return False
+            else:   # part2 doesn't exist
+                return False
+        else:   # target is in part1, search part1
+            i = 0
+            j = p + 1
+            while i < j:
+                m = i + (j - i) // 2
+                if nums[m] == target:
+                    return True
+                elif nums[m] < target:
+                    i = m + 1
+                else:
+                    j = m
+            return False
