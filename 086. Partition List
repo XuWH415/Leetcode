@@ -1,0 +1,51 @@
+Given a linked list and a value x, partition it such that all nodes less than x come before nodes greater than or equal to x.
+
+You should preserve the original relative order of the nodes in each of the two partitions.
+
+For example,
+Given 1->4->3->2->5->2 and x = 3,
+return 1->2->2->4->3->5.
+
+Tags: Linked List, Two Pointers
+
+
+
+----------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+*** Python ***
+
+# Definition for singly-linked list.
+# class ListNode(object):
+#     def __init__(self, x):
+#         self.val = x
+#         self.next = None
+
+class Solution(object):
+    def partition(self, head, x):
+        """
+        :type head: ListNode
+        :type x: int
+        :rtype: ListNode
+        """
+        dhless = ListNode(-1)   # dummy head links nodes with value less than x
+        dhgreater = ListNode(-1)    # dummy head links nodes with value greater or equal than x
+        p = dhless
+        q = dhgreater
+        cur = head
+        
+        while cur:
+            if cur.val < x:
+                p.next = cur
+                cur = cur.next
+                p = p.next
+            else:
+                q.next = cur
+                cur = cur.next
+                q = q.next
+        
+        p.next = dhgreater.next # chaining nodes less than x before nodes greater or equal than x
+        q.next = None   # finish up the tail
+        
+        return dhless.next
