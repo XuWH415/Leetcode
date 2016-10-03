@@ -1,0 +1,72 @@
+Given a 2D binary matrix filled with 0's and 1's, find the largest rectangle containing only 1's and return its area.
+
+For example, given the following matrix:
+
+1 0 1 0 0
+1 0 1 1 1
+1 1 1 1 1
+1 0 0 1 0
+Return 6.
+
+Tags: Array, Hash Table, Stack, Dynamic Programming
+Similar Problems: (H) Largest Rectangle in Histogram, (M) Maximal Square
+
+
+
+----------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+*** Python ***
+
+class Solution(object):
+    def largestRectangleArea(self, heights):
+        """
+        :type heights: List[int]
+        :rtype: int
+        """
+        if not heights:
+            return 0
+            
+        heights.append(0)
+        stack = [-1]    # provide baseline when calculation
+        maxarea = 0
+        for i in range(len(heights)):
+            if not stack or heights[i] >= heights[stack[-1]]:   # push index into stack when height is increasing
+                stack.append(i)
+            else:
+                l = stack[-1]   # record the index at top of stack because it represents the index of highest height in stack
+                while stack and heights[stack[-1]] > heights[i]:    # it can't be ">=" here because it will pop out the baseline when encounter "0"
+                    t = stack.pop() # get index of current height in stack
+                    maxarea = max(maxarea, (l - stack[-1]) * heights[t])    # the width is from (include) l to index p (not include) at top of stack AFTER pop()
+                stack.append(i) # push index into stack
+        
+        heights.pop()   # recover length of heights
+        
+        return maxarea
+        
+    def maximalRectangle(self, matrix):
+        """
+        :type matrix: List[List[str]]
+        :rtype: int
+        """
+        row = len(matrix)
+        col = 0
+        if row:
+            col = len(matrix[0])
+        if row == 0 or col == 0:
+            return 0
+        
+        heights = [0] * col
+        maxrectangle = 0
+            
+        for i in range(row):
+            for j in range(col):    # update heights of each column by making each row as x-axis
+                if matrix[i][j] == '1':
+                    heights[j] += 1
+                else:
+                    heights[j] = 0
+                    
+            maxrectangle = max(maxrectangle, self.largestRectangleArea(heights))    # solve as the problem "largest rectangle area"
+        
+        return maxrectangle
