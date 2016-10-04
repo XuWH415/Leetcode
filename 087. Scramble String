@@ -45,6 +45,7 @@ Tags: Dynamic Programming, String
 
 *** Python ***
 
+### Dynamic Programming: O(n**3) because only i1, j2 and k matters eventually
 class Solution(object):
     def isScramble(self, s1, s2):
         """
