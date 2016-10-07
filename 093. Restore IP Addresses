@@ -1,0 +1,57 @@
+Given a string containing only digits, restore it by returning all possible valid IP address combinations.
+
+For example:
+Given "25525511135",
+
+return ["255.255.11.135", "255.255.111.35"]. (Order does not matter)
+
+Tags: Backtracking, String
+
+
+
+----------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+*** Python ***
+
+class Solution(object):
+    def restoreIpAddresses(self, s):
+        """
+        :type s: str
+        :rtype: List[str]
+        """
+        def isValid(s): # valid address should be between 0 - 255 and no '0x' or '0xx'
+            l = len(s)
+            if l == 0 or l > 3:
+                return False
+            elif s[0] == '0' and l != 1:
+                return False
+            elif l == 3 and s > '255':
+                return False
+            else:
+                return True
+            
+        def solver(s, i, n, prev, result):
+            if i >= len(s):
+                return
+            if n == 4:  # finish up the last address
+                if isValid(s[i:]):
+                    result.append(s[prev[0]:prev[1]] + '.' + s[prev[1]:prev[2]] + '.' + s[prev[2]:i] + '.' + s[i:])
+                else:
+                    return
+            else:
+                for j in range(1, 4):
+                    if (i + j) > len(s):
+                        break
+                    if isValid(s[i:i + j]):
+                        solver(s, i + j, n + 1, prev + [i], result)
+        
+        if len(s) < 4 or len(s) > 12:
+            return []  
+        
+        result = []
+        prev = []
+        solver(s, 0, 1, prev, result)
+        
+        return result
