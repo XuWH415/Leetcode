@@ -1,0 +1,47 @@
+Given n, how many structurally unique BST's (binary search trees) that store values 1...n?
+
+For example,
+Given n = 3, there are a total of 5 unique BST's.
+
+   1         3     3      2      1
+    \       /     /      / \      \
+     3     2     1      1   3      2
+    /     /       \                 \
+   2     1         2                 3
+
+Tags: Tree, Dynamic Programming
+Similar Problems: (M) Unique Binary Search Trees II
+
+
+
+----------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+*** Python ***
+
+class Solution(object):
+    def numTrees(self, n):
+        """
+        :type n: int
+        :rtype: int
+        """
+        def solver(start, end, d):
+            if (end - start) <= 1:
+                return 1
+                
+            if (end - start) in d:
+                return d[end - start]
+            
+            d[end - start] = 0
+            for i in range(start, end): # number i divide range [start, end) into [start, i) and [i + 1, end)
+                left = solver(start, i, d)
+                right = solver(i + 1, end, d)
+                d[end - start] += left * right
+            
+            return d[end - start]
+            
+        d = dict()
+        result = solver(1, n + 1, d)
+        
+        return result
