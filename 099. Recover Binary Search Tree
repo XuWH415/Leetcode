@@ -36,22 +36,86 @@ class Solution(object):
             
             inorderTraverse(root.left, prev, first, second)
             
-            if prev[0] and prev[0].val > root.val:
-                if not first[0]:
+            if prev[0] and prev[0].val > root.val:  # current node isn't leftmost node and the order is wrong
+                if not first[0]:    # record first swaped node only once
                     first[0] = prev[0]
-                second[0] = root
+                second[0] = root    # update second swaped node if second misorder is found
                 
-            prev[0] = root
+            prev[0] = root  # update previous node for right tree
             
             inorderTraverse(root.right, prev, first, second)
         
         
-        first = [None]
-        second = [None]
-        prev = [None]
+        first = [None]  # first swaped node
+        second = [None] # second swaped node
+        prev = [None]   # previous node in inorder sequence
         
         inorderTraverse(root, prev, first, second)
         
+        # swap the value
         t = first[0].val
         first[0].val = second[0].val
         second[0].val = t
+
+### Morris Inorder Traversal: O(n) <= T < O(4*n), S = O(1)
+# Definition for a binary tree node.
+# class TreeNode(object):
+#     def __init__(self, x):
+#         self.val = x
+#         self.left = None
+#         self.right = None
+class Solution(object):
+    def recoverTree(self, root):
+        """
+        :type root: TreeNode
+        :rtype: void Do not return anything, modify root in-place instead.
+        """
+        cur, prev = root, None  # pointers used in Morris inorder traversal
+        first = second = None    # pointers used to keep track of first & second misorders
+        precedent = None    # pointer records the precedent of the current node in PARTICULAR cases, not always
+        
+        while cur:
+            # no left child, cur has to go right
+            # there could be two situations when goes right
+            # situation 1: goes back following chains made before
+            # situation 2: goes forward following tree edge
+            if not cur.left:
+                # precedent could come from both places below
+                if precedent and precedent.val > cur.val:
+                    if not first:
+                        first = precedent
+                    second = cur
+                    
+                # record cur whenever cur moves to the right
+                # in situation 1, this will lead to the comparison below
+                # in situation 2, this will lead to the comparison above
+                precedent = cur
+                
+                cur = cur.right
+            else:
+                prev = cur.left
+                while prev.right and prev.right != cur: # find rightmost node in left tree
+                    prev = prev.right
+                
+                if prev.right == None:  # first time visit, chains up the node by making use of null pointer
+                    prev.right = cur
+                    cur = cur.left
+                else:   # second time visit, unchains the node
+                    # when unchaining, this can only be situation 1
+                    # if precedent has value, it has to be the precedent of cur in inorder sequence
+                    if precedent and precedent.val > cur.val:
+                        if not first:
+                            first = precedent
+                        second = cur
+                        
+                    # record cur whenever cur moves to the right
+                    # since this leads to situation 2, this will lead to the comparison above
+                    precedent = cur
+                    
+                    prev.right = None
+                    cur = cur.right
+        
+        # swap values
+        t = first.val
+        first.val = second.val
+        second.val = t
