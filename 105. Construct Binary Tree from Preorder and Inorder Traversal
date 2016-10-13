@@ -1,0 +1,51 @@
+Given preorder and inorder traversal of a tree, construct the binary tree.
+
+Note:
+You may assume that duplicates do not exist in the tree.
+
+Tags: Tree, Array, Depth-first Search
+Similar Problems: (M) Construct Binary Tree from Inorder and Postorder Traversal
+
+Reference: http://blog.csdn.net/linhuanmars/article/details/24389549
+
+
+
+----------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+*** Python ***
+
+# Definition for a binary tree node.
+# class TreeNode(object):
+#     def __init__(self, x):
+#         self.val = x
+#         self.left = None
+#         self.right = None
+class Solution(object):
+    def buildTree(self, preorder, inorder):
+        """
+        :type preorder: List[int]
+        :type inorder: List[int]
+        :rtype: TreeNode
+        """
+        def solver(preorder, i1, j1, inorder, i2, j2, d):
+            if i1 >= j1 or i2 >= j2:
+                return None
+                
+            n = TreeNode(preorder[i1])
+            m = d[n.val]
+            n.left = solver(preorder, i1 + 1, i1 + 1 + (m - i2), inorder, i2, m, d)
+            n.right = solver(preorder, i1 + 1 + (m - i2), j1, inorder, m + 1, j2, d)
+            
+            return n
+        
+        if not preorder or not inorder or len(preorder) != len(inorder):
+            return None
+            
+        d = dict()
+        l = len(preorder)
+        for i in range(l):
+            d[inorder[i]] = i
+        
+        return solver(preorder, 0, l, inorder, 0, l, d)
