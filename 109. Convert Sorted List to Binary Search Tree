@@ -12,7 +12,7 @@ Reference: http://bangbingsyb.blogspot.com/2014/11/leetcode-convert-sorted-list-
 
 *** Python ***
 
-### Convert To Array And Top-Down: T = O(n), S = O(n)
+### Convert To Array: T = O(n), S = O(n)
 # Definition for singly-linked list.
 # class ListNode(object):
 #     def __init__(self, x):
@@ -51,7 +51,7 @@ class Solution(object):
             
         return solver(nums, 0, l)
         
-### Bottom-Up: T = O(n), S = O(1)
+### Build Tree When Visiting: T = O(n), S = O(1)
 # Definition for singly-linked list.
 # class ListNode(object):
 #     def __init__(self, x):
