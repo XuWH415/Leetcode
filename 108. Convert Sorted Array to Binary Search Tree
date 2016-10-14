@@ -1,0 +1,37 @@
+Given an array where elements are sorted in ascending order, convert it to a height balanced BST.
+
+Tags: Tree, Depth-first Search
+Similar Problems: (M) Convert Sorted List to Binary Search Tree
+
+
+
+----------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+*** Python ***
+
+# Definition for a binary tree node.
+# class TreeNode(object):
+#     def __init__(self, x):
+#         self.val = x
+#         self.left = None
+#         self.right = None
+class Solution(object):
+    def sortedArrayToBST(self, nums):
+        """
+        :type nums: List[int]
+        :rtype: TreeNode
+        """
+        def solver(nums, i, j):
+            if i >= j:
+                return None
+                
+            k = (i + j) // 2    # get middle
+            n = TreeNode(nums[k])
+            n.left = solver(nums, i, k)
+            n.right = solver(nums, k + 1, j)
+            
+            return n
+        
+        return solver(nums, 0, len(nums))
