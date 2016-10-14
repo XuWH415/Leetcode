@@ -1,0 +1,99 @@
+Given a singly linked list where elements are sorted in ascending order, convert it to a height balanced BST.
+
+Tags: Depth-first Search, Linked List
+Similar Problems: (M) Convert Sorted Array to Binary Search Tree
+
+
+
+--------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+*** Python ***
+
+### Convert To Array And Top-Down: T = O(n), S = O(n)
+# Definition for singly-linked list.
+# class ListNode(object):
+#     def __init__(self, x):
+#         self.val = x
+#         self.next = None
+# Definition for a binary tree node.
+# class TreeNode(object):
+#     def __init__(self, x):
+#         self.val = x
+#         self.left = None
+#         self.right = None
+class Solution(object):
+    def sortedListToBST(self, head):
+        """
+        :type head: ListNode
+        :rtype: TreeNode
+        """
+        def solver(nums, i, j):
+            if i >= j:
+                return None
+                
+            k = (i + j) // 2    # get middle
+            n = TreeNode(nums[k])
+            n.left = solver(nums, i, k)
+            n.right = solver(nums, k + 1, j)
+            
+            return n
+        
+        cur = head
+        l = 0
+        nums = []
+        while cur:
+            nums.append(cur.val)
+            l += 1
+            cur = cur.next
+            
+        return solver(nums, 0, l)
+        
+### Bottom-Up: T = O(n), S = O(1)
+# Definition for singly-linked list.
+# class ListNode(object):
+#     def __init__(self, x):
+#         self.val = x
+#         self.next = None
+# Definition for a binary tree node.
+# class TreeNode(object):
+#     def __init__(self, x):
+#         self.val = x
+#         self.left = None
+#         self.right = None
+class Solution(object):
+    def sortedListToBST(self, head):
+        """
+        :type head: ListNode
+        :rtype: TreeNode
+        """
+        def solver(head, i, j): # i and j are just indicators showing when to stop
+            if i >= j:
+                return None, head
+            
+            k = (i + j) // 2
+            
+            left, head = solver(head, i, k) # get root of left subtree and update current node
+            
+            root = TreeNode(head.val)   # current node is the root for left subtree and right subtree
+            
+            head = head.next    # move to next node from where starts to build right subtree
+            right, head = solver(head, k + 1, j)    # get root of right subtree and update current node
+            
+            root.left = left
+            root.right = right
+            
+            return root, head
+            
+        cur = head
+        l = 0
+        while cur:  # find length of linked list
+            l += 1
+            cur = cur.next
+        
+        cur = head
+        root, cur = solver(cur, 0, l)
+        
+        return root
+        
