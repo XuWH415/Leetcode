@@ -1,0 +1,57 @@
+Given a binary tree, return the bottom-up level order traversal of its nodes' values. (ie, from left to right, level by level from leaf to root).
+
+For example:
+Given binary tree [3,9,20,null,null,15,7],
+    3
+   / \
+  9  20
+    /  \
+   15   7
+return its bottom-up level order traversal as:
+[
+  [15,7],
+  [9,20],
+  [3]
+]
+
+Tags: Tree, Breadth-first Search
+Similar Problems: (E) Binary Tree Level Order Traversal
+
+
+
+----------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+*** Python ***
+
+# Definition for a binary tree node.
+# class TreeNode(object):
+#     def __init__(self, x):
+#         self.val = x
+#         self.left = None
+#         self.right = None
+class Solution(object):
+    def levelOrderBottom(self, root):
+        """
+        :type root: TreeNode
+        :rtype: List[List[int]]
+        """
+        if not root:
+            return []
+            
+        level = [root]
+        result = []
+        while level:
+            r = []
+            nextlevel = []
+            for n in level:
+                r.append(n.val)
+                if n.left:
+                    nextlevel.append(n.left)
+                if n.right:
+                    nextlevel.append(n.right)
+            result.insert(0, r) # insert from head instead of appending
+            level = nextlevel
+        
+        return result
