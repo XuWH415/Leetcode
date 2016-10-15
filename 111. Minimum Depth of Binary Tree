@@ -1,0 +1,76 @@
+Given a binary tree, find its minimum depth.
+
+The minimum depth is the number of nodes along the shortest path from the root node down to the nearest leaf node.
+
+Tags: Tree, Depth-first Search, Breadth-first Search
+Similar Problems: (E) Binary Tree Level Order Traversal, (E) Maximum Depth of Binary Tree
+
+
+
+----------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+*** Python ***
+
+### Depth-First Search: T = O(n), S = O(n)
+# Definition for a binary tree node.
+# class TreeNode(object):
+#     def __init__(self, x):
+#         self.val = x
+#         self.left = None
+#         self.right = None
+class Solution(object):
+    def minDepth(self, root):
+        """
+        :type root: TreeNode
+        :rtype: int
+        """
+        if not root:
+            return 0
+        
+        leftdepth = self.minDepth(root.left)
+        rightdepth = self.minDepth(root.right)
+        if not leftdepth:
+            return rightdepth + 1
+        if not rightdepth:
+            return leftdepth + 1
+        
+        return min(leftdepth, rightdepth) + 1
+        
+### Breadth-First Search: T = O(n), S = O(n)
+# Definition for a binary tree node.
+# class TreeNode(object):
+#     def __init__(self, x):
+#         self.val = x
+#         self.left = None
+#         self.right = None
+
+class Solution(object):
+    def minDepth(self, root):
+        """
+        :type root: TreeNode
+        :rtype: int
+        """
+        if not root:
+            return 0
+        
+        level = [root]
+        depth = 0
+        while level:
+            newlevel = []
+            depth += 1
+            stop = False
+            for n in level:
+                if not n.left and not n.right:
+                    stop = True
+                    break
+                if n.left:
+                    newlevel.append(n.left)
+                if n.right:
+                    newlevel.append(n.right)
+            if stop:
+                break
+            level = newlevel
+        
+        return depth
