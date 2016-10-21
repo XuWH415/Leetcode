@@ -30,6 +30,8 @@ After calling your function, the tree should look like:
 Tags: Tree, Depth-first Search
 Similar Problems: (H) Populating Next Right Pointers in Each Node II, (M) Binary Tree Right Side View
 
+Reference: https://siddontang.gitbooks.io/leetcode-solution/content/tree/populating_next_right_pointers_in_each_node.html
+
 
 
 ----------------------------------------------------------------------------------------------------------------------------------------
