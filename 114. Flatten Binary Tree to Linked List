@@ -1,0 +1,67 @@
+Given a binary tree, flatten it to a linked list in-place.
+
+For example,
+Given
+
+         1
+        / \
+       2   5
+      / \   \
+     3   4   6
+The flattened tree should look like:
+   1
+    \
+     2
+      \
+       3
+        \
+         4
+          \
+           5
+            \
+             6
+click to show hints.
+
+Hints:
+If you notice carefully in the flattened tree, each node's right child points to the next node of a pre-order traversal.
+
+Tags: Tree, Depth-first Search
+
+
+
+----------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+*** Python ***
+
+# Definition for a binary tree node.
+# class TreeNode(object):
+#     def __init__(self, x):
+#         self.val = x
+#         self.left = None
+#         self.right = None
+class Solution(object):
+    def flatten(self, root):
+        """
+        :type root: TreeNode
+        :rtype: void Do not return anything, modify root in-place instead.
+        """
+        if not root:
+            return
+        
+        dummyhead = TreeNode(0)
+        cur = dummyhead
+        stack = [root]
+        while stack:
+            t = stack.pop()
+            if t.right:
+                stack.append(t.right)
+            if t.left:
+                stack.append(t.left)
+            
+            cur.right = t
+            cur.left = None
+            cur = cur.right
+        
+        del dummyhead
