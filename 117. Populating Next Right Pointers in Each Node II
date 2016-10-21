@@ -1,0 +1,71 @@
+Follow up for problem "Populating Next Right Pointers in Each Node".
+
+What if the given tree could be any binary tree? Would your previous solution still work?
+
+Note:
+
+You may only use constant extra space.
+For example,
+Given the following binary tree,
+         1
+       /  \
+      2    3
+     / \    \
+    4   5    7
+After calling your function, the tree should look like:
+         1 -> NULL
+       /  \
+      2 -> 3 -> NULL
+     / \    \
+    4-> 5 -> 7 -> NULL
+
+Tags: Tree, Depth-first Search
+Similar Problems: (M) Populating Next Right Pointers in Each Node
+
+
+
+----------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+*** Python ***
+
+### Level Traversal: T = O(n), S = O(1)
+# Definition for binary tree with next pointer.
+# class TreeLinkNode:
+#     def __init__(self, x):
+#         self.val = x
+#         self.left = None
+#         self.right = None
+#         self.next = None
+class Solution:
+    # @param root, a tree link node
+    # @return nothing
+    def connect(self, root):
+        if not root:
+            return
+        
+        p = root
+        nextfirst = None    # leftmost node in the next level
+        last = None         # last unchained node in the next level
+        
+        while p:
+            if p.left:  # p has left child
+                if not nextfirst:
+                    nextfirst = p.left
+                if last:
+                    last.next = p.left   
+                last = p.left
+            if p.right:   # p has right child
+                if not nextfirst:
+                    nextfirst = p.right
+                if last:
+                    last.next = p.right
+                last = p.right
+            
+            if p.next:  # if p has next node
+                p = p.next
+            else:   # p is the rightmost node in this level, move to next level
+                p = nextfirst
+                nextfirst = None
+                last = None
