@@ -1,0 +1,46 @@
+Say you have an array for which the ith element is the price of a given stock on day i.
+
+Design an algorithm to find the maximum profit. You may complete at most two transactions.
+
+Note:
+You may not engage in multiple transactions at the same time (ie, you must sell the stock before you buy again).
+
+Tags: Array, Dynamic Programming
+Similar Problems: (E) Best Time to Buy and Sell Stock, (M) Best Time to Buy and Sell Stock II, (H) Best Time to Buy and Sell Stock IV
+
+Reference: http://bangbingsyb.blogspot.com/2014/11/leetcode-best-time-to-buy-and-sell.html
+
+
+----------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+*** Python ***
+
+class Solution(object):
+    def maxProfit(self, prices):
+        """
+        :type prices: List[int]
+        :rtype: int
+        """
+        l = len(prices)
+        if l < 2:
+            return 0
+            
+        left = [0] * l
+        premin = 0
+        for i in range(1, l):
+            left[i] = max(left[i - 1], prices[i] - prices[premin])
+            if prices[i] < prices[premin]:
+                premin = i
+                
+        right = [0] * l
+        promax = l - 1
+        for i in range(l - 2, -1, -1):
+            right[i] = max(right[i + 1], prices[promax] - prices[i])
+            if prices[i] > prices[promax]:
+                promax = i
+        
+        profit = max([left[i] + right[i] for i in range(l)])
+        
+        return profit
