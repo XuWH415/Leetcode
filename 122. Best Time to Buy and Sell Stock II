@@ -13,7 +13,7 @@ Similar Problems: (E) Best Time to Buy and Sell Stock, (H) Best Time to Buy and 
 
 *** Python ***
 
-### T = O(n), S = O(1)
+### Peak Valley: T = O(n), S = O(1)
 class Solution(object):
     def maxProfit(self, prices):
         """
@@ -43,5 +43,23 @@ class Solution(object):
         
         if setmin:
             profit += prices[-1] - prices[premin]
+        
+        return profit
+        
+### Augment Path: T = O(n), S = O(1)
+class Solution(object):
+    def maxProfit(self, prices):
+        """
+        :type prices: List[int]
+        :rtype: int
+        """
+        l = len(prices)
+        if l == 0 or l == 1:
+            return 0
+            
+        profit = 0
+        for i in range(1, l):
+            if prices[i] > prices[i - 1]:
+                profit += prices[i] - prices[i - 1]
         
         return profit
