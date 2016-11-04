@@ -1,0 +1,56 @@
+Given a binary tree, find the maximum path sum.
+
+For this problem, a path is defined as any sequence of nodes from some starting node to any node in the tree along the parent-child connections. The path does not need to go through the root.
+
+For example:
+Given the below binary tree,
+
+       1
+      / \
+     2   3
+Return 6.
+
+Tags: Tree, Depth-first Search
+Similar Problems: (E) Path Sum, (M) Sum Root to Leaf Numbers
+
+
+
+----------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+*** Python ***
+
+### One Pass Depth-First Search: T = O(n), S = O(1)
+# Definition for a binary tree node.
+# class TreeNode(object):
+#     def __init__(self, x):
+#         self.val = x
+#         self.left = None
+#         self.right = None
+class Solution(object):
+    def maxPathSum(self, root):
+        """
+        :type root: TreeNode
+        :rtype: int
+        """
+
+        def solver(root, maxsum):
+            if not root:
+                return -float('inf')
+            
+            left = solver(root.left, maxsum)
+            right = solver(root.right, maxsum)
+            
+            # record max path sum among one-legged and two-legged branch
+            maxsum[0] = max(maxsum[0], root.val, root.val + max(left, right), root.val + left + right)
+            
+            return max(root.val, root.val + max(left, right)) # return only one-legged branch
+        
+        if not root:
+            return 0
+            
+        maxsum = [-float('inf')]
+        solver(root, maxsum)
+        
+        return maxsum[0]
