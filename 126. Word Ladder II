@@ -1,0 +1,88 @@
+Given two words (beginWord and endWord), and a dictionary's word list, find all shortest transformation sequence(s) from beginWord to endWord, such that:
+
+Only one letter can be changed at a time
+Each intermediate word must exist in the word list
+For example,
+
+Given:
+beginWord = "hit"
+endWord = "cog"
+wordList = ["hot","dot","dog","lot","log"]
+Return
+  [
+    ["hit","hot","dot","dog","cog"],
+    ["hit","hot","lot","log","cog"]
+  ]
+Note:
+All words have the same length.
+All words contain only lowercase alphabetic characters.
+
+Tags: Array, Backtracking, Breadth-first Search, String
+
+Reference: http://bangbingsyb.blogspot.com/2014/11/leetcode-word-ladder-i-ii.html
+
+
+
+----------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+*** Python ***
+
+### T = O(w * n) where w is length of word and n is size of dict, TOO SLOW, S = O(n)
+class Solution(object):
+    def findLadders(self, beginWord, endWord, wordlist):
+        """
+        :type beginWord: str
+        :type endWord: str
+        :type wordlist: Set[str]
+        :rtype: List[List[str]]
+        """
+        def isNeighbor(w1, w2):
+            diff = 0
+            for i in range(len(w1)):
+                if w1[i] != w2[i]:
+                    diff += 1
+            
+            return diff < 2
+        
+        if isNeighbor(beginWord, endWord):
+            return [[beginWord, endWord]]
+        
+        wordlist.add(endWord)
+        newlist = [beginWord] + list(wordlist)
+        l = len(newlist)
+        
+        visited = [False] * l
+        visited[0] = True
+        level = [[0]]
+        
+        stop = False
+        result = []
+        
+        while level:
+            if stop:
+                break
+            newlevel = []
+            for i in range(len(level)):
+                for j in range(1, l):
+                    if not visited[j] and isNeighbor(newlist[level[i][-1]], newlist[j]):
+                        if newlist[j] == endWord:
+                            stop = True
+                            result.append(level[i] + [j])
+                        newlevel.append(level[i] + [j])
+                        
+            for i in newlevel:
+                visited[i[-1]] = True
+            
+            level = newlevel
+        
+        newresult = []
+        for r in result:
+            t = []
+            for i in range(len(r)):
+                t.append(newlist[r[i]])
+            newresult.append(t)
+        
+        
+        return newresult
