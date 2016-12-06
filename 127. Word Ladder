@@ -16,6 +16,9 @@ Note:
 * All words have the same length.
 * All words contain only lowercase alphabetic characters.
 
+Reference: http://bangbingsyb.blogspot.com/2014/11/leetcode-word-ladder-i-ii.html
+            https://discuss.leetcode.com/topic/43603/fast-and-clean-python-c-solution-using-double-bfs-beats-98
+
 
 
 ----------------------------------------------------------------------------------------------------------------------------------------
