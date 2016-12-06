@@ -1,0 +1,107 @@
+Given two words (beginWord and endWord), and a dictionary's word list, find the length of shortest transformation sequence from beginWord to endWord, such that:
+
+Only one letter can be changed at a time
+Each intermediate word must exist in the word list
+For example,
+
+Given:
+beginWord = "hit"
+endWord = "cog"
+wordList = ["hot","dot","dog","lot","log"]
+As one shortest transformation is "hit" -> "hot" -> "dot" -> "dog" -> "cog",
+return its length 5.
+
+Note:
+* Return 0 if there is no such transformation sequence.
+* All words have the same length.
+* All words contain only lowercase alphabetic characters.
+
+
+
+----------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+*** Python ***
+
+### Breadth-First Search (One Way): 
+class Solution(object):
+    def ladderLength(self, beginWord, endWord, wordList):
+        """
+        :type beginWord: str
+        :type endWord: str
+        :type wordList: Set[str]
+        :rtype: int
+        """
+        def findNeighbors(w, level, d):
+            a = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'}
+            n = set()
+            for i in range(len(w)):
+                n |= {(w[:i] + c + w[i + 1:]) for c in a if c != w[i] and (w[:i] + c + w[i + 1:]) in d and (w[:i] + c + w[i + 1:]) not in level}
+            
+            return n
+        
+        if beginWord == endWord:
+            return 2
+        
+        length = 2
+        level = {beginWord}
+        
+        while level:
+            newlevel = set()
+            for word in level:
+                neighbors = findNeighbors(word, level, wordList)
+                if endWord in neighbors:
+                    return length
+                newlevel |= neighbors
+            
+            wordList -= level
+            level = newlevel
+            length += 1
+        
+        return 0
+        
+### Breadth-First Search (Double Way):
+class Solution(object):
+    def ladderLength(self, beginWord, endWord, wordList):
+        """
+        :type beginWord: str
+        :type endWord: str
+        :type wordList: Set[str]
+        :rtype: int
+        """
+        def findNeighbors(w, level, d): # find w's neighbor in d but not in current level
+            a = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'}
+            n = set()
+            for i in range(len(w)):
+                n |= {(w[:i] + c + w[i + 1:]) for c in a if c != w[i] and (w[:i] + c + w[i + 1:]) in d and (w[:i] + c + w[i + 1:]) not in level}
+            
+            return n
+            
+        if beginWord == endWord:
+            return 2
+            
+        length = 1
+        prelevel = {beginWord}  # level propagates from beginWord 
+        postlevel = {endWord}   # level propagates from endWord
+        
+        while prelevel and postlevel:   # both of them have to have words in them, otherwise there's no transformation sequence
+            if prelevel & postlevel:    # prelevel and postlevel "meet"
+                return length
+            
+            newlevel = set()
+            length += 1
+            if len(prelevel) >= len(postlevel): # the postlevel is easier to propagate
+                for word in postlevel:  # find next level
+                    newlevel |= findNeighbors(word, postlevel, wordList)
+                
+                wordList -= postlevel   # remove last level from wordList
+                postlevel = newlevel
+            else:                               # the prelevel is easier to propagate
+                for word in prelevel:   # find next level
+                    newlevel |= findNeighbors(word, prelevel, wordList)
+                
+                wordList -= prelevel    # remove last level from wordList
+                prelevel = newlevel
+        
+        return 0
