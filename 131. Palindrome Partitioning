@@ -1,0 +1,58 @@
+Given a string s, partition s such that every substring of the partition is a palindrome.
+
+Return all possible palindrome partitioning of s.
+
+For example, given s = "aab",
+Return
+
+[
+  ["aa","b"],
+  ["a","a","b"]
+]
+
+Tags: Backtracking
+Similar Problems: (H) Palindrome Partitioning II
+
+
+
+----------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+*** Python ***
+
+class Solution(object):
+    def isPalindrome(self, s):
+        i = 0
+        j = len(s) - 1
+        while i < j:
+            if s[i] == s[j]:
+                i += 1
+                j -= 1
+            else:
+                return False
+        
+        return True
+
+    def partition(self, s):
+        """
+        :type s: str
+        :rtype: List[List[str]]
+        """
+        def solver(s, start, d):
+            if start >= len(s):
+                return [[]]
+            if start in d:
+                return d[start]
+                
+            d[start] = []
+            for i in range(start + 1, len(s) + 1):
+                if self.isPalindrome(s[start:i]):
+                    d[start] += [[s[start:i]] + x for x in solver(s, i, d)]
+            
+            return d[start]
+            
+        d = dict()
+        solver(s, 0, d)
+        
+        return d[0]
