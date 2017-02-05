@@ -1,0 +1,79 @@
+There are N children standing in a line. Each child is assigned a rating value.
+
+You are giving candies to these children subjected to the following requirements:
+
+Each child must have at least one candy.
+Children with a higher rating get more candies than their neighbors.
+What is the minimum candies you must give?
+
+Tags: Greedy
+
+
+
+----------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+*** Python ***
+
+### One-Pass Solution: T = O(n), S = O(1)
+class Solution(object):
+    def candy(self, ratings):
+        """
+        :type ratings: List[int]
+        :rtype: int
+        """
+        if not ratings:
+            return 0
+        
+        up = down = 1
+        candies = 0
+        for i in range(1, len(ratings)):
+            if ratings[i] > ratings[i - 1]:
+                if down == 1:
+                    up += 1
+                else:   # only calculate when reach the bottom and is about to go up, leave the last one in the bottom for the next calculation
+                    if up >= down:
+                        candies += ((1 + up) * up) // 2 + ((1 + down) * down) // 2 - down - 1
+                    else:
+                        candies += ((1 + up) * up) // 2 + ((1 + down) * down) // 2 - up - 1
+                    up = 2
+                    down = 1
+            elif ratings[i] < ratings[i - 1]:
+                down += 1
+            else:   # when children with equal scores are found, calculate as if it reach the bottom, leave the last one in the bottom for the next calculation
+                if up >= down:
+                    candies += ((1 + up) * up) // 2 + ((1 + down) * down) // 2 - down - 1
+                else:
+                    candies += ((1 + up) * up) // 2 + ((1 + down) * down) // 2 - up - 1
+                    
+                candies += 1    # children with equal score only need 1 candy since they don't need to compare with neighbors
+                up = down = 1
+        
+        # finish-up calculation as if it reaches the bottom, this time includes the last one in the bottom
+        if up >= down:
+            candies += ((1 + up) * up) // 2 + ((1 + down) * down) // 2 - down
+        else:
+            candies += ((1 + up) * up) // 2 + ((1 + down) * down) // 2 - up
+            
+        return candies
+        
+### Two-Passes Solution: T = O(2 * n), S = O(n)
+class Solution(object):
+    def candy(self, ratings):
+        """
+        :type ratings: List[int]
+        :rtype: int
+        """
+        size = len(ratings)
+        candies = [1] * size
+        
+        for x in range(1, size):    # from the front to the back
+            if ratings[x] > ratings[x - 1]:
+                candies[x] = candies[x - 1] + 1
+                
+        for x in range(size - 2, -1, -1):   # from the back to the front
+            if ratings[x] > ratings[x + 1]:
+                candies[x] = max(candies[x], candies[x + 1] + 1)    # update the top of the hill
+                
+        return sum(candies)
