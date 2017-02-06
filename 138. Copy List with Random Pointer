@@ -1,0 +1,92 @@
+A linked list is given such that each node contains an additional random pointer which could point to any node in the list or null.
+
+Return a deep copy of the list.
+
+Tags: Hash Table, Linked List
+Similar Problems: (M) Clone Graph
+
+
+
+----------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+*** Python ***
+
+### One Pass with Hash Table: T = O(n), S = O(n)
+# Definition for singly-linked list with a random pointer.
+# class RandomListNode(object):
+#     def __init__(self, x):
+#         self.label = x
+#         self.next = None
+#         self.random = None
+class Solution(object):
+    def copyRandomList(self, head):
+        """
+        :type head: RandomListNode
+        :rtype: RandomListNode
+        """
+        if not head:
+            return None
+            
+        d = dict()
+        p = head
+        while p:
+            if p not in d:
+                d[p] = RandomListNode(p.label)
+                
+            if p.next:
+                if p.next not in d:
+                    d[p.next] = RandomListNode((p.next).label)
+                d[p].next = d[p.next]
+                
+            if p.random:
+                if p.random not in d:
+                    d[p.random] = RandomListNode((p.random).label)
+                d[p].random = d[p.random]
+            
+            p = p.next
+        
+        return d[head]
+
+### Three Passes without Hash Table: T = O(n), S = O(1)
+# Definition for singly-linked list with a random pointer.
+# class RandomListNode(object):
+#     def __init__(self, x):
+#         self.label = x
+#         self.next = None
+#         self.random = None
+class Solution(object):
+    def copyRandomList(self, head):
+        """
+        :type head: RandomListNode
+        :rtype: RandomListNode
+        """
+        if not head:
+            return None
+            
+        p = head
+        while p:    # create new node and insert right behind each node
+            q = RandomListNode(p.label)
+            q.next = p.next
+            p.next = q
+            p = q.next
+        
+        p = head
+        while p:    # direct random pointer in new node accordingly
+            q = p.next
+            if p.random:
+                q.random = (p.random).next
+            p = q.next
+            
+        p = head
+        dummyhead = RandomListNode(0)
+        q = dummyhead
+        while p:    # seperate new list from old list
+            q.next = p.next
+            q = q.next
+            p.next = q.next
+            p = p.next
+        
+        return dummyhead.next
+        
