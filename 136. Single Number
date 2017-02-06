@@ -1,0 +1,28 @@
+Given an array of integers, every element appears twice except for one. Find that single one.
+
+Note:
+Your algorithm should have a linear runtime complexity. Could you implement it without using extra memory?
+
+Tags: Hash Table, Bit Manipulation
+Similar Problems: (M) Single Number II, (M) Single Number III, (E) Missing Number, (M) Find the Duplicate Number, (E) Find the Difference
+
+
+
+----------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+*** Python ***
+
+### Bit Manipulation: T = O(n), S = O(1)
+class Solution(object):
+    def singleNumber(self, nums):
+        """
+        :type nums: List[int]
+        :rtype: int
+        """
+        s = 0
+        for n in nums:
+            s ^= n
+        
+        return s
