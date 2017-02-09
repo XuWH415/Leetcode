@@ -1,0 +1,65 @@
+Given a linked list, return the node where the cycle begins. If there is no cycle, return null.
+
+Note: Do not modify the linked list.
+
+Follow up:
+Can you solve it without using extra space?
+
+Tags: Linked List, Two Pointers
+Similar Problems: (E) Linked List Cycle, (M) Find the Duplicate Number
+
+Reference: http://bangbingsyb.blogspot.com/2014/11/leetcode-linked-list-cycle-i-ii.html
+
+
+
+----------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+*** Python ***
+
+### Two Pointers: T = O(n), S = O(1)
+# Definition for singly-linked list.
+# class ListNode(object):
+#     def __init__(self, x):
+#         self.val = x
+#         self.next = None
+class Solution(object):
+    def detectCycle(self, head):
+        """
+        :type head: ListNode
+        :rtype: ListNode
+        """
+        slow = fast = head
+        while fast and fast.next:
+            slow = slow.next
+            fast = fast.next.next
+            if fast == slow:    # first meet
+                fast = head
+                while fast != slow:
+                    fast = fast.next
+                    slow = slow.next
+                return slow
+        return None
+
+### Record Path: T = O(n), S = O(n)
+# Definition for singly-linked list.
+# class ListNode(object):
+#     def __init__(self, x):
+#         self.val = x
+#         self.next = None
+class Solution(object):
+    def detectCycle(self, head):
+        """
+        :type head: ListNode
+        :rtype: ListNode
+        """
+        d = set()
+        p = head
+        while(p != None):
+            if p not in d:
+                d.add(p)
+                p = p.next
+            else:
+                break
+        return p
