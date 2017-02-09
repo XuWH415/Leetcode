@@ -1,0 +1,76 @@
+Given a non-empty string s and a dictionary wordDict containing a list of non-empty words, add spaces in s to construct a sentence where each word is a valid dictionary word. You may assume the dictionary does not contain duplicate words.
+
+Return all such possible sentences.
+
+For example, given
+s = "catsanddog",
+dict = ["cat", "cats", "and", "sand", "dog"].
+
+A solution is ["cats and dog", "cat sand dog"].
+
+UPDATE (2017/1/4):
+The wordDict parameter had been changed to a list of strings (instead of a set of strings). Please reload the code definition to get the latest changes.
+
+Tags: Dynamic Programming, Backtracking
+Similar Problems: (M) Word Break, (H) Concatenated Words
+
+
+
+--------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+*** Python ***
+
+class Solution(object):
+    def wordBreak(self, s, wordDict):
+        """
+        :type s: str
+        :type wordDict: List[str]
+        :rtype: List[str]
+        """
+        def isBreakable(s, wordDict, minlen, maxlen):
+            d = set(wordDict)
+            v = [False] * (len(s) + 1)          # record if s[:i] can be broke by words in dictionary
+            v[0] = True
+            numOfContinuousFalse = 0
+            
+            for i in range(1, len(s) + 1):
+                for j in range(i - maxlen, i - minlen + 1):
+                    if j >= 0:
+                        if v[j] and s[j:i] in d:    # s[:i] can be broke if s[:j] can be broke and s[j:i] is in the dictionary
+                            v[i] = True
+                            numOfContinuousFalse = 0
+                            break
+                if not v[i]:
+                    numOfContinuousFalse += 1
+                if numOfContinuousFalse >= maxlen:
+                    break
+                    
+            return v[len(s)]
+        
+        if not s or not wordDict:
+            return []
+            
+        maxlen = max(map(len, wordDict))
+        minlen = min(map(len, wordDict))
+        d = set(wordDict)
+        
+        if not isBreakable(s, wordDict, minlen, maxlen):    # check if s is breakable or not, if not, then no need to continue
+            return []
+        
+        v = [False] * (len(s) + 1)
+        v[0] = True
+        record = [[] for i in range(len(s) + 1)]            # record the conbination of breaks
+        record[0].append("")
+        
+        for i in range(1, len(s) + 1):
+            for j in range(i - minlen, i - 1 - maxlen, -1):
+                if j >= 0:
+                    if v[j] and s[j:i] in d:
+                        v[i] = True
+                        record[i] += map((lambda x:x + " " + s[j:i]), record[j])    # record word breaks
+                else:
+                    break
+        
+        return map(string.lstrip, record[len(s)])
