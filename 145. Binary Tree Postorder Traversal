@@ -1,0 +1,54 @@
+Given a binary tree, return the postorder traversal of its nodes' values.
+
+For example:
+Given binary tree {1,#,2,3},
+   1
+    \
+     2
+    /
+   3
+return [3,2,1].
+
+Note: Recursive solution is trivial, could you do it iteratively?
+
+Tags: Tree, Stack
+Similar Problems: (M) Binary Tree Inorder Traversal
+
+Reference: https://en.wikipedia.org/wiki/Tree_traversal#Post-order_2
+
+
+
+----------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+*** Python ***
+
+# Definition for a binary tree node.
+# class TreeNode(object):
+#     def __init__(self, x):
+#         self.val = x
+#         self.left = None
+#         self.right = None
+class Solution(object):
+    def postorderTraversal(self, root):
+        """
+        :type root: TreeNode
+        :rtype: List[int]
+        """
+        stack = []
+        result = []
+        p = root
+        lastvisit = None
+        while p or stack:
+            if p:
+                stack.append(p)
+                p = p.left
+            else:
+                if stack[-1].right and lastvisit != stack[-1].right:
+                    p = stack[-1].right
+                else:
+                    result.append(stack[-1].val)
+                    lastvisit = stack.pop()
+        
+        return result
