@@ -1,0 +1,42 @@
+Sort a linked list using insertion sort.
+
+Tags: Linked List, Sort
+Similar Problems: (M) Sort List
+
+
+
+-----------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+*** Python ***
+
+# Definition for singly-linked list.
+# class ListNode(object):
+#     def __init__(self, x):
+#         self.val = x
+#         self.next = None
+
+class Solution(object):
+    def insertionSortList(self, head):
+        """
+        :type head: ListNode
+        :rtype: ListNode
+        """
+        if not head:
+            return None
+        
+        dummyhead = ListNode(-float("inf"))
+        dummyhead.next = head
+        head = head.next
+        dummyhead.next.next = None
+        while head:
+            p = dummyhead
+            while p.next and p.next.val < head.val:
+                p = p.next
+            q = head
+            head = head.next
+            q.next = p.next
+            p.next = q
+        
+        return dummyhead.next
