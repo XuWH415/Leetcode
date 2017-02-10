@@ -1,0 +1,59 @@
+Sort a linked list in O(n log n) time using constant space complexity.
+
+Tags: Linked List, Sort
+Similar Problems: (E) Merge Two Sorted Lists, (M) Sort Colors, (M) Insertion Sort List
+
+Reference: http://stackoverflow.com/questions/2571049/how-to-sort-in-place-using-the-merge-sort-algorithm
+
+
+
+----------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+*** Python ***
+
+### Regular Merge Sort: T = O(nlgn), S = O(lgn) NOT CONSTANT SPACE
+### For CONSTANT SPACE MERGE SORT, refer to link above
+# Definition for singly-linked list.
+# class ListNode(object):
+#     def __init__(self, x):
+#         self.val = x
+#         self.next = None
+class Solution(object):
+    def sortList(self, head):
+        """
+        :type head: ListNode
+        :rtype: ListNode
+        """
+        if not head or not head.next:
+            return head
+            
+        dummyhead1 = ListNode(-1)
+        dummyhead1.next = head
+        slow = fast = dummyhead1
+        while fast and fast.next:   # find middle point and break list into two halves
+            slow = slow.next
+            fast = fast.next.next
+        dummyhead2 = ListNode(-2)
+        dummyhead2.next = slow.next
+        slow.next = None
+        
+        dummyhead1.next, dummyhead2.next = self.sortList(dummyhead1.next), self.sortList(dummyhead2.next)
+        
+        p = dummyhead1
+        while p.next and dummyhead2.next:           # merge two lists
+            if p.next.val <= dummyhead2.next.val:
+                p = p.next
+            else:
+                t = dummyhead2.next
+                dummyhead2.next = t.next
+                t.next = p.next
+                p.next = t
+                p = t
+        if not p.next:
+            p.next = dummyhead2.next
+            
+        return dummyhead1.next
+        
+        
