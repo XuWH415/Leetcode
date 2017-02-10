@@ -30,16 +30,13 @@ class Solution(object):
                 stack.append(int(n))
             elif n == '+':
                 b = stack.pop()
-                a = stack.pop()
-                stack.append(a + b)
+                stack[-1] += b
             elif n == '-':
                 b = stack.pop()
-                a = stack.pop()
-                stack.append(a - b)
+                stack[-1] -= b
             elif n == '*':
                 b = stack.pop()
-                a = stack.pop()
-                stack.append(a * b)
+                stack[-1] *= b
             else:
                 b = stack.pop()
                 a = stack.pop()
