@@ -1,0 +1,54 @@
+Given an input string, reverse the string word by word.
+
+For example,
+Given s = "the sky is blue",
+return "blue is sky the".
+
+Update (2015-02-12):
+For C programmers: Try to solve it in-place in O(1) space.
+
+click to show clarification.
+
+Tags: String
+Similar Problems: (M) Reverse Words in a String II
+
+
+
+-----------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+*** Python ***
+
+### Built-in Function
+class Solution(object):
+    def reverseWords(self, s):
+        """
+        :type s: str
+        :rtype: str
+        """
+        s = s.strip()
+        # import re
+        # s = re.sub(r' +', ' ', s)
+        words = s.split()
+        words.reverse()
+        return " ".join(words)
+        
+### One Pass: T = O(n), S = O(1)
+class Solution(object):
+    def reverseWords(self, s):
+        """
+        :type s: str
+        :rtype: str
+        """
+        result = ''
+        i, j = len(s) - 1, len(s)
+        while i >= 0:
+            if s[i] == " ":
+                j = i
+            elif i == 0 or s[i - 1] == ' ':
+                if result:
+                    result += " "
+                result += s[i:j]
+            i -= 1
+        return result
