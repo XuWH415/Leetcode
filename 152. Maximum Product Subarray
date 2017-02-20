@@ -25,9 +25,7 @@ class Solution(object):
         if not nums:
             return 0
             
-        result = nums[0]
-        curmax = nums[0]
-        curmin = nums[0]
+        result = curmax = curmin = nums[0]
         for i in range(1, len(nums)):
             temp = curmax
             curmax = max(curmax * nums[i], curmin * nums[i], nums[i])
